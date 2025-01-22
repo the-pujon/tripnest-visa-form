@@ -106,11 +106,11 @@ export default function TravelForm() {
               id="visa-form"
             >
               <div className="flex items-center gap-4">
-                <h2 className="text-base font-semibold text-primary">
+                <h2 className="text-base font-bold text-primary">
                   Traveler 01 (Primary Contact)
                 </h2>
                 <div className="flex items-center gap-2">
-                  <Checkbox id="myself" className="border-secondary" />
+                  <Checkbox id="myself" className="border-secondary data-[state=checked]:bg-transparent data-[state=checked]:text-secondary" />
                   <label
                     htmlFor="myself"
                     className="text-sm text-muted-foreground"
@@ -158,7 +158,7 @@ export default function TravelForm() {
                 <SelectTrigger>
                   <SelectValue placeholder="Choose your visa type" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent >
                   <SelectItem value="tourist">Tourist Visa</SelectItem>
                   <SelectItem value="business">Business Visa</SelectItem>
                   <SelectItem value="student">Student Visa</SelectItem>
@@ -166,8 +166,10 @@ export default function TravelForm() {
                 </SelectContent>
               </Select>
 
+              
+
               <div className="space-y-4">
-                <h3 className="text-primary font-semibold ">
+                <h3 className="text-primary font-bold ">
                   General Documents (Mandatory for all E-Visa)
                 </h3>
                 <div className="grid md:grid-cols-2 gap-x-24 gap-y-9">
@@ -211,7 +213,7 @@ export default function TravelForm() {
 
               {showBusinessDocs && (
                 <div className="space-y-4">
-                  <h3 className="text-primary font-semibold">
+                  <h3 className="text-primary font-bold">
                     Businessperson Documents
                   </h3>
                   <div className="grid md:grid-cols-2 gap-6">
