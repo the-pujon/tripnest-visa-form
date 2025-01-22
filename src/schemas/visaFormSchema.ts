@@ -5,6 +5,12 @@ const fileUploadSchema = z.object({
   name: z.string(),
   uploaded: z.boolean(),
   uploadTime: z.string().optional(),
+  size: z
+    .object({
+      current: z.number(),
+      total: z.number(),
+    })
+    .optional(),
 })
 
 const generalDocumentsSchema = z.object({
@@ -24,6 +30,24 @@ const businessDocumentsSchema = z.object({
   officePad: fileUploadSchema,
 })
 
+const studentDocumentsSchema = z.object({
+  studentId: fileUploadSchema,
+  travelLetter: fileUploadSchema,
+  birthCertificate: fileUploadSchema,
+})
+
+const jobHolderDocumentsSchema = z.object({
+  nocCertificate: fileUploadSchema,
+  officialId: fileUploadSchema,
+  bmdcCertificate: fileUploadSchema,
+  barCouncilCertificate: fileUploadSchema,
+  retirementCertificate: fileUploadSchema,
+})
+
+const otherDocumentsSchema = z.object({
+  marriageCertificate: fileUploadSchema,
+})
+
 export const travelerFormSchema = z.object({
   givenName: z.string().min(1, "Given name is required"),
   surname: z.string().min(1, "Surname is required"),
@@ -34,5 +58,7 @@ export const travelerFormSchema = z.object({
   visaType: z.string().min(1, "Visa type is required"),
   generalDocuments: generalDocumentsSchema,
   businessDocuments: businessDocumentsSchema.optional(),
+  studentDocuments: studentDocumentsSchema.optional(),
+  jobHolderDocuments: jobHolderDocumentsSchema.optional(),
+  otherDocuments: otherDocumentsSchema.optional(),
 })
-
