@@ -9,11 +9,14 @@ import { useFormValidation } from "@/hooks/useFormValidation";
 //type for the form methods ref
 type FormMethodsRef = Map<number, ReturnType<typeof useForm<IVisaForm>>>;
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+
 export default function TravelForm() {
   const [travelerIds, setTravelerIds] = useState<number[]>([1]);
   const formMethodsRef = useRef<FormMethodsRef>(new Map());
   const [isAllValid, setIsAllValid] = useState(false);
   const { isFormValid } = useFormValidation();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const registerFormMethods = useCallback(
     (id: number, methods: ReturnType<typeof useForm<IVisaForm>> | null) => {
@@ -28,13 +31,14 @@ export default function TravelForm() {
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
 
-    const handleValidation = () => {
+    const handleValidation = async () => {
       if (timeoutId) clearTimeout(timeoutId);
 
       timeoutId = setTimeout(async () => {
         const forms = Array.from(formMethodsRef.current.values());
-        // console.log("Forms:", forms);
+        console.log("Forms to validate:", forms.length);
         const valid = await isFormValid(forms);
+        console.log("Validation result:", valid);
         setIsAllValid(valid);
       }, 500);
     };
@@ -54,10 +58,13 @@ export default function TravelForm() {
 
   //handle submit all
   const handleSubmitAll = async () => {
+    setIsSubmitting(true);
     try {
       const forms = Array.from(formMethodsRef.current.values());
-      // console.log("Forms:", forms);
+      console.log("Number of forms to validate:", forms.length);
+      
       const isValid = await isFormValid(forms);
+      console.log("Overall form validation result:", isValid);
 
       if (!isValid) {
         throw new Error(
@@ -65,41 +72,109 @@ export default function TravelForm() {
         );
       }
 
-      // Validate all forms
-      const validationResults = await Promise.all(
-        forms.map(async (methods) => {
-          // console.log("Methods:", methods);
-          const result = await methods.trigger(); //trigger validation
-          // console.log("Result:", result);
-          if (!result) {
-            console.log("Form validation errors:", methods.formState.errors);
+      // Submit each traveler's application
+      const submissions = Array.from(formMethodsRef.current.entries()).map(
+        async ([id, methods]) => {
+          console.log(`Processing form for traveler ${id}`);
+          const formData = new FormData();
+          const values = methods.getValues();
+          console.log("Form Values:", values);
+
+          // Create base form data object without document fields first
+          const formDataObj = {
+            givenName: values.givenName,
+            surname: values.surname,
+            phone: values.phone,
+            email: values.email,
+            address: values.address,
+            notes: values.notes || '',
+            visaType: values.visaType
+          };
+
+          // Add files to FormData first
+          if (values.generalDocuments) {
+            Object.entries(values.generalDocuments).forEach(([key, file]) => {
+              if (file?.file instanceof File) {
+                formData.append(key, file.file);
+              }
+            });
           }
-          return result;
-        })
+
+          // Add type-specific documents based on visa type
+          if (values.visaType === 'business' && values.businessDocuments) {
+            Object.entries(values.businessDocuments).forEach(([key, file]) => {
+              if (file?.file instanceof File) {
+                formData.append(key, file.file);
+              }
+            });
+          }
+
+          if (values.visaType === 'student' && values.studentDocuments) {
+            Object.entries(values.studentDocuments).forEach(([key, file]) => {
+              if (file?.file instanceof File) {
+                formData.append(key, file.file);
+              }
+            });
+          }
+
+          if (values.visaType === 'jobHolder' && values.jobHolderDocuments) {
+            Object.entries(values.jobHolderDocuments).forEach(([key, file]) => {
+              if (file?.file instanceof File) {
+                formData.append(key, file.file);
+              }
+            });
+          }
+
+          if (values.visaType === 'other' && values.otherDocuments) {
+            Object.entries(values.otherDocuments).forEach(([key, file]) => {
+              if (file?.file instanceof File) {
+                formData.append(key, file.file);
+              }
+            });
+          }
+
+          // Important: Append the data first
+          formData.append('data', JSON.stringify(formDataObj));
+
+          // Log the form data for debugging
+          console.log("Form Data being sent:", {
+            formData: Object.fromEntries(formData.entries()),
+            jsonData: formDataObj
+          });
+
+          try {
+            const response = await fetch(`${API_URL}/visa/create`, {
+              method: 'POST',
+              body: formData,
+            });
+
+            const responseData = await response.json();
+
+            if (!response.ok) {
+              throw new Error(responseData.message || 'Failed to submit visa application');
+            }
+
+            return responseData;
+          } catch (error) {
+            console.error('Error submitting visa application:', error);
+            throw error;
+          }
+        }
       );
-      // console.log("Validation Results:", validationResults);
 
-      if (validationResults.some((result) => !result)) {
-        throw new Error("Please check all required fields are filled correctly.");
-      }
-
-      // Prepare form data for submission
-      const formData = Array.from(formMethodsRef.current.entries()).map(
-        ([id, methods]) => ({
-          id,
-          data: methods.getValues()
-        })
-      );
-
-      console.log("All form data:", formData);
-      alert("All travel forms have been submitted successfully.");
+      const results = await Promise.all(submissions);
+      console.log("Submission results:", results);
+      
+      alert("All visa applications have been submitted successfully!");
     } catch (error) {
       console.error("Submission error:", error);
       alert(
         error instanceof Error
           ? error.message
-          : "Please ensure all forms are filled out correctly."
+          : "An error occurred while submitting the applications."
       );
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -140,9 +215,16 @@ export default function TravelForm() {
           type="button"
           onClick={handleSubmitAll}
           className="self-center py-2 px-11 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-secondary hover:bg-primary/70 transition-all duration-500 focus:outline-none focus:ring-0 focus:ring-offset-0 disabled:bg-gray-400 disabled:cursor-not-allowed"
-          disabled={!isAllValid}
+          disabled={!isAllValid || isSubmitting}
         >
-          Submit All Documents
+          {isSubmitting ? (
+            <span className="flex items-center gap-2">
+              <span className="animate-spin">⏳</span>
+              Submitting...
+            </span>
+          ) : (
+            "Submit All Documents"
+          )}
         </button>
       </div>
     </div>
