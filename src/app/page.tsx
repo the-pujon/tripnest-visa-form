@@ -459,12 +459,28 @@ export default function TravelForm() {
 
   const handleSubmitAll = async () => {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const isValid = await isFormValid();
-      // console.log(isValid);
-      // if (!isValid) {
-      //   throw new Error("Please fill all required fields and upload necessary documents.");
-      // }
+      
+      if (!isValid) {
+        throw new Error("Please fill all required fields and upload necessary documents for all travelers.");
+      }
+
+      // Trigger validation for all forms
+      const forms = Array.from(formMethodsRef.current.values());
+      const validationResults = await Promise.all(
+        forms.map(async (methods) => {
+          const result = await methods.trigger();
+          if (!result) {
+            const errors = methods.formState.errors;
+            console.log('Form validation errors:', errors);
+          }
+          return result;
+        })
+      );
+
+      if (validationResults.some(result => !result)) {
+        throw new Error("Please check all required fields are filled correctly.");
+      }
 
       const formData = Array.from(formMethodsRef.current.entries()).map(([id, methods]) => ({
         id,
@@ -475,7 +491,7 @@ export default function TravelForm() {
       
       // Uncomment to implement actual submission
       // await submitTravelForm(formData.map(f => f.data));
-      // alert("All travel forms have been submitted successfully.");
+      alert("All travel forms have been submitted successfully.");
     } catch (error) {
       console.error('Submission error:', error);
       alert(error instanceof Error ? error.message : "Please ensure all forms are filled out correctly.");
@@ -522,7 +538,7 @@ console.log(isAllValid)
           type="button"
           onClick={handleSubmitAll}
           className="self-center py-2 px-11 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-secondary hover:bg-primary/70 transition-all duration-500 focus:outline-none focus:ring-0 focus:ring-offset-0 disabled:bg-gray-400 disabled:cursor-not-allowed"
-          // disabled={!isAllValid}
+          disabled={!isAllValid}
         >
           Submit All Documents
         </button>
