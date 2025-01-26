@@ -44,6 +44,8 @@ export interface IFileUpload {
     marriageCertificate: IFileUpload;
   }
   
+  export type VisaType = 'business' | 'student' | 'jobHolder' | 'other' | '';
+  
   export interface IVisaForm {
     givenName: string;
     surname: string;
@@ -51,7 +53,7 @@ export interface IFileUpload {
     email: string;
     address: string;
     notes: string;
-    visaType: string;
+    visaType: VisaType;
     generalDocuments: IGeneralDocuments;
     businessDocuments?: IBusinessDocuments;
     studentDocuments?: IStudentDocuments;
