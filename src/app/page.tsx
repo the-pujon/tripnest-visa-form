@@ -4,10 +4,16 @@ import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { travelerFormSchema } from "@/schemas/visaFormSchema";
 import type { IVisaForm } from "@/interface/visaFormInterface";
-import { FileUpload } from "@/components/form/file-upload";
+// import { FileUpload } from "@/components/form/file-upload";
 import { useEffect, useState, useRef, useCallback } from "react";
-import { Input } from "@/components/ui/input";
-import { Title } from "@/components/ui/title";
+// import { Input } from "@/components/ui/input";
+// import { Title } from "@/components/ui/title";
+// import { TravelerHeader } from "@/components/form/TravelerHeader";
+import { TravelerBasicInfo } from "@/components/form/TravelerBasicInfo";
+import { VisaTypeSelector } from "@/components/form/VisaTypeSelector";
+import { DocumentSection } from "@/components/form/DocumentSection";
+import { GENERAL_DOCUMENTS, BUSINESS_DOCUMENTS, STUDENT_DOCUMENTS, WORK_DOCUMENTS, OTHER_DOCUMENTS } from "@/constants/documents";
+import { TravelerHeader } from "@/components/form/TravelerHeader";
 // import { submitTravelForm } from "./app/actions"
 
 const defaultFileUpload = { file: null, name: "", uploaded: false };
@@ -52,20 +58,14 @@ function TravelerFormSection({ id, onRemove, isFirst, onRegisterFormMethods }: T
     },
   });
 
-  // Register form methods when component mounts
   useEffect(() => {
     onRegisterFormMethods(formMethods);
-    // Cleanup when component unmounts
     return () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      onRegisterFormMethods(null as any); // Clear the registration
+      onRegisterFormMethods(null);
     };
-  }, [formMethods, id, onRegisterFormMethods]); // Add id as dependency
+  }, [formMethods, id, onRegisterFormMethods]);
 
-  const handleVisaTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value;
-    
-    // Reset only this form's documents
+  const handleVisaTypeChange = useCallback((value: string) => {
     const currentValues = formMethods.getValues();
     formMethods.reset({
       ...currentValues,
@@ -78,7 +78,6 @@ function TravelerFormSection({ id, onRemove, isFirst, onRegisterFormMethods }: T
       },
     });
 
-    // Set appropriate document section based on visa type
     if (value === "business") {
       formMethods.setValue("businessDocuments", {
         tradeLicense: defaultFileUpload,
@@ -101,255 +100,60 @@ function TravelerFormSection({ id, onRemove, isFirst, onRegisterFormMethods }: T
         retirementCertificate: defaultFileUpload,
       });
     }
-  };
+  }, [formMethods]);
 
   return (
     <div className="mb-8">
       <FormProvider {...formMethods}>
-        <div className="bg-white shadow-md rounded-lg overflow-hidden px-28" data-traveler-id={id}>
+        <div className="bg-white shadow-md rounded-lg overflow-hidden px-28">
           <div className="p-6">
-            <form
-              className="space-y-6"
-              id={formKey}
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <Title>
-                    Traveler {String(id).padStart(2, "0")}
-                    {isFirst ? " (Primary Contact)" : ""}
-                  </Title>
-                  {isFirst && (
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        id="myself"
-                        className="rounded text-orange-500 focus:ring-orange-500"
-                      />
-                      <label htmlFor="myself" className="text-sm text-gray-600">
-                        Myself
-                      </label>
-                    </div>
-                  )}
-                </div>
-                {id !== 1 && (
-                  <button
-                    type="button"
-                    onClick={() => onRemove(id)}
-                    className="text-red-500 hover:text-red-700"
-                  >
-                    Remove Traveler
-                  </button>
-                )}
-              </div>
-              <div className="grid md:grid-cols-2 gap-4">
-                <Input
-                  placeholder="Given Name (First Name & Middle Name)*"
-                  {...formMethods.register("givenName")}
-                  error={formMethods.formState.errors.givenName?.message?.toString()}
-                />
-                <Input
-                  placeholder="Surname (Last Name)*"
-                  {...formMethods.register("surname")}
-                  error={formMethods.formState.errors.surname?.message?.toString()}
-                />
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-4">
-                <Input
-                  placeholder="Phone Number*"
-                  type="tel"
-                  {...formMethods.register("phone")}
-                  error={formMethods.formState.errors.phone?.message?.toString()}
-                />
-                <Input
-                  placeholder="Email*"
-                  type="email"
-                  {...formMethods.register("email")}
-                  error={formMethods.formState.errors.email?.message?.toString()}
-                />
-              </div>
-
-              <Input
-                placeholder="Local Address*"
-                {...formMethods.register("address")}
-                error={formMethods.formState.errors.address?.message?.toString()}
+            <form className="space-y-6" id={formKey}>
+              <TravelerHeader 
+                id={id} 
+                isFirst={isFirst} 
+                onRemove={onRemove} 
               />
+              
+              <TravelerBasicInfo />
+              
+              <VisaTypeSelector onVisaTypeChange={handleVisaTypeChange} />
 
-              <Input
-                placeholder="Special Notes"
-                {...formMethods.register("notes")}
-                error={formMethods.formState.errors.notes?.message?.toString()}
+              <DocumentSection
+                title="General Documents (Mandatory for all E-Visa)"
+                documents={GENERAL_DOCUMENTS}
+                travelerId={id}
               />
-              <select
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500 [&>option:hover]:bg-[#0066FF] [&>option:checked]:bg-[#0066FF]"
-                onChange={handleVisaTypeChange}
-                value={formMethods.watch("visaType")}
-              >
-                <option value="">Select document type</option>
-                <option value="work">Job Holder&apos;s Documents</option>
-                <option value="business">
-                  Businessperson&apos;s Documents
-                </option>
-                <option value="student">Student&apos;s Documents</option>
-                <option value="other">Other Documents</option>
-              </select>
-
-              <div className="space-y-4">
-                <Title>General Documents (Mandatory for all E-Visa)</Title>
-                <div className="grid md:grid-cols-2 gap-6">
-                  <FileUpload
-                    number={1}
-                    label="Passport Scanned Copy"
-                    name="generalDocuments.passportCopy"
-                    travelerId={id}
-                  />
-                  <FileUpload
-                    number={2}
-                    label="Recent Passport Size Photo"
-                    name="generalDocuments.passportPhoto"
-                    travelerId={id}
-                  />
-                  <FileUpload
-                    number={3}
-                    label="Bank Statement of the last 06 months"
-                    name="generalDocuments.bankStatement"
-                    travelerId={id}
-                  />
-                  <FileUpload
-                    number={4}
-                    label="Bank Solvency Certificate"
-                    name="generalDocuments.bankSolvency"
-                    travelerId={id}
-                  />
-                  <FileUpload
-                    number={5}
-                    label="Visiting Card Copy"
-                    name="generalDocuments.visitingCard"
-                    travelerId={id}
-                  />
-                  <FileUpload
-                    number={6}
-                    label="Hotel Booking Copy"
-                    name="generalDocuments.hotelBooking"
-                    travelerId={id}
-                  />
-                  <FileUpload
-                    number={7}
-                    label="Air Ticket Booking Copy"
-                    name="generalDocuments.airTicket"
-                    travelerId={id}
-                  />
-                </div>
-              </div>
 
               {formMethods.watch("visaType") === "business" && (
-                <div className="space-y-4">
-                  <Title>Businessperson Documents</Title>
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <FileUpload
-                      number={1}
-                      label="Valid Trade license copy with notary public (English Translation)"
-                      name="businessDocuments.tradeLicense"
-                      travelerId={id}
-                    />
-                    <FileUpload
-                      number={2}
-                      label="Notarized ID with an English translation (Govt. Employee)"
-                      name="businessDocuments.notarizedId"
-                      travelerId={id}
-                    />
-                    <FileUpload
-                      number={3}
-                      label="Memorandum for Limited Company (For Businessperson)"
-                      name="businessDocuments.memorandum"
-                      travelerId={id}
-                    />
-                    <FileUpload
-                      number={4}
-                      label="Office Pad / Company Letter Head Pad (For Businessperson)"
-                      name="businessDocuments.officePad"
-                      travelerId={id}
-                    />
-                  </div>
-                </div>
+                <DocumentSection
+                  title="Businessperson Documents"
+                  documents={BUSINESS_DOCUMENTS}
+                  travelerId={id}
+                />
               )}
 
               {formMethods.watch("visaType") === "student" && (
-                <div className="space-y-4">
-                  <Title>Student&apos;s Document</Title>
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <FileUpload
-                      number={1}
-                      label="Student ID card copy (For Student)"
-                      name="studentDocuments.studentId"
-                      travelerId={id}
-                    />
-                    <FileUpload
-                      number={2}
-                      label="Travel Letter or Leave Letter from the Educational Institute"
-                      name="studentDocuments.travelLetter"
-                      travelerId={id}
-                    />
-                    <FileUpload
-                      number={3}
-                      label="Birth Certificate (Only for Child & infant)"
-                      name="studentDocuments.birthCertificate"
-                      travelerId={id}
-                    />
-                  </div>
-                </div>
+                <DocumentSection
+                  title="Student Documents"
+                  documents={STUDENT_DOCUMENTS}
+                  travelerId={id}
+                />
               )}
 
               {formMethods.watch("visaType") === "work" && (
-                <div className="space-y-4">
-                  <Title>Job Holder&apos;s Document</Title>
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <FileUpload
-                      number={1}
-                      label="NOC Certificate"
-                      name="jobHolderDocuments.nocCertificate"
-                      travelerId={id}
-                    />
-                    <FileUpload
-                      number={2}
-                      label="Official ID card copy"
-                      name="jobHolderDocuments.officialId"
-                      travelerId={id}
-                    />
-                    <FileUpload
-                      number={3}
-                      label="BMDC certificate for Doctors"
-                      name="jobHolderDocuments.bmdcCertificate"
-                      travelerId={id}
-                    />
-                    <FileUpload
-                      number={4}
-                      label="BAR Council Certificate"
-                      name="jobHolderDocuments.barCouncilCertificate"
-                      travelerId={id}
-                    />
-                    <FileUpload
-                      number={5}
-                      label="Retirement certificate"
-                      name="jobHolderDocuments.retirementCertificate"
-                      travelerId={id}
-                    />
-                  </div>
-                </div>
+                <DocumentSection
+                  title="Job Holder Documents"
+                  documents={WORK_DOCUMENTS}
+                  travelerId={id}
+                />
               )}
 
               {formMethods.watch("visaType") === "other" && (
-                <div className="space-y-4">
-                  <Title>Other Documents</Title>
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <FileUpload
-                      number={1}
-                      label="Marriage Certificate or Nikahnama (if spouse's name is not on the applicant's passport)"
-                      name="otherDocuments.marriageCertificate"
-                      travelerId={id}
-                    />
-                  </div>
-                </div>
+                <DocumentSection
+                  title="Other Documents"
+                  documents={OTHER_DOCUMENTS}
+                  travelerId={id}
+                />
               )}
             </form>
           </div>
@@ -391,9 +195,9 @@ export default function TravelForm() {
           return false;
         }
 
-        // Check general documents
+        // Check general documents - verify they are actually uploaded
         const generalDocsValid = Object.values(values.generalDocuments).every(
-          (doc) => doc.uploaded
+          (doc) => doc && doc.uploaded && doc.file
         );
         if (!generalDocsValid) return false;
 
@@ -401,23 +205,46 @@ export default function TravelForm() {
         switch (values.visaType) {
           case "business":
             if (!values.businessDocuments || 
-                !Object.values(values.businessDocuments).every(doc => doc.uploaded)) {
+                !Object.values(values.businessDocuments).every(doc => doc && doc.uploaded && doc.file)) {
               return false;
             }
             break;
           case "student":
             if (!values.studentDocuments || 
-                !Object.values(values.studentDocuments).every(doc => doc.uploaded)) {
+                !Object.values(values.studentDocuments).every(doc => doc && doc.uploaded && doc.file)) {
               return false;
             }
             break;
           case "work":
             if (!values.jobHolderDocuments || 
-                !Object.values(values.jobHolderDocuments).every(doc => doc.uploaded)) {
+                !Object.values(values.jobHolderDocuments).every(doc => doc && doc.uploaded && doc.file)) {
+              return false;
+            }
+            break;
+          case "other":
+            if (!values.otherDocuments || 
+                !Object.values(values.otherDocuments).every(doc => doc && doc.uploaded && doc.file)) {
               return false;
             }
             break;
         }
+
+        // Clear other document types based on visa type
+        if (values.visaType !== "business") {
+          values.businessDocuments = undefined;
+        }
+        if (values.visaType !== "student") {
+          values.studentDocuments = undefined;
+        }
+        if (values.visaType !== "work") {
+          values.jobHolderDocuments = undefined;
+        }
+        if (values.visaType !== "other") {
+          values.otherDocuments = undefined;
+        }
+
+        // Update the form values with cleared documents
+        methods.reset(values);
       }
       
       return true;
@@ -482,10 +309,22 @@ export default function TravelForm() {
         throw new Error("Please check all required fields are filled correctly.");
       }
 
-      const formData = Array.from(formMethodsRef.current.entries()).map(([id, methods]) => ({
-        id,
-        data: methods.getValues(),
-      }));
+      // Clean up the form data before submission
+      const formData = Array.from(formMethodsRef.current.entries()).map(([id, methods]) => {
+        const values = methods.getValues();
+        const visaType = values.visaType;
+
+        // Clear other document types
+        if (visaType !== "business") delete values.businessDocuments;
+        if (visaType !== "student") delete values.studentDocuments;
+        if (visaType !== "work") delete values.jobHolderDocuments;
+        if (visaType !== "other") delete values.otherDocuments;
+
+        return {
+          id,
+          data: values,
+        };
+      });
 
       console.log('All form data:', formData);
       
