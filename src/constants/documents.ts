@@ -44,17 +44,17 @@ export const BUSINESS_DOCUMENTS = [
   },
   {
     number: 2,
-    label: "Notarized ID Card",
+    label: "Notarized GO with an English Translation (Govt. Employee)",
     name: "businessDocuments.notarizedId"
   },
   {
     number: 3,
-    label: "Memorandum",
+    label: "Memorandum for Limited Company. (For Business Person)",
     name: "businessDocuments.memorandum"
   },
   {
     number: 4,
-    label: "Office Pad",
+    label: "Office Pad/Company Letter Head Pad (For Business Person)",
     name: "businessDocuments.officePad"
   }
 ];
@@ -62,19 +62,20 @@ export const BUSINESS_DOCUMENTS = [
 export const STUDENT_DOCUMENTS = [
   {
     number: 1,
-    label: "Student ID Card",
+    label: "Student ID Card (For Student)",
     name: "studentDocuments.studentId"
   },
   {
     number: 2,
-    label: "Travel Letter",
-    name: "studentDocuments.travelLetter"
+    label: "Birth Certificate (Only for Child and infant) (For Student)",
+    name: "studentDocuments.birthCertificate"
   },
   {
     number: 3,
-    label: "Birth Certificate",
-    name: "studentDocuments.birthCertificate"
+    label: "Travel Letter or the leave letter from the Educational Institution (For Student)",
+    name: "studentDocuments.travelLetter"
   }
+  
 ];
 
 export const WORK_DOCUMENTS = [
@@ -90,7 +91,7 @@ export const WORK_DOCUMENTS = [
   },
   {
     number: 3,
-    label: "BMDC Certificate",
+    label: "BMDC Certificate of Doctors",
     name: "jobHolderDocuments.bmdcCertificate"
   },
   {

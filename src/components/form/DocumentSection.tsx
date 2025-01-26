@@ -15,7 +15,7 @@ export function DocumentSection({ title, documents, travelerId }: DocumentSectio
   return (
     <div className="space-y-4">
       <Title>{title}</Title>
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 gap-x-24 gap-y-6">
         {documents.map((doc) => (
           <FileUpload
             key={doc.name}
