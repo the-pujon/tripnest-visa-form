@@ -9,11 +9,13 @@ interface FileUploadProps {
   number: number;
   label: string;
   name: string;
+  travelerId: number;
 }
 
-export function FileUpload({ number, label, name }: FileUploadProps) {
+export function FileUpload({ number, label, name, travelerId }: FileUploadProps) {
   const { setValue, watch } = useFormContext();
   const fileData = watch(name) as IFileUpload;
+  const inputId = `${name}-${travelerId}`;
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -80,9 +82,6 @@ export function FileUpload({ number, label, name }: FileUploadProps) {
                 <span className="text-xs">Uploaded</span>
               </div>
             </div>
-
-            <div className="flex items-center justify-between gap-2"></div>
-            <div className="flex items-center justify-between gap-2"></div>
           </div>
         </div>
       </div>
@@ -98,11 +97,12 @@ export function FileUpload({ number, label, name }: FileUploadProps) {
       <div>
         <input
           type="file"
-          id={name}
+          id={inputId}
+          name={`${name}-${travelerId}`}
           className="hidden"
           onChange={handleFileChange}
         />
-        <label htmlFor={name}>
+        <label htmlFor={inputId}>
           <span className="inline-flex gap-2 items-center px-4 py-2 border border-gray-300 rounded-md bg-white hover:bg-gray-50 cursor-pointer">
             <RiUploadCloud2Line className="text-[#FF6B00]" />
             <span className="text-sm font-medium text-[#FF6B00]">Upload</span>
