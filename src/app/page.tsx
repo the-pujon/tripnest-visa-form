@@ -6,11 +6,12 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import { TravelerFormSection } from "@/components/form/TavelerFormSection";
 import { useFormValidation } from "@/hooks/useFormValidation";
 
+//type for the form methods ref
+type FormMethodsRef = Map<number, ReturnType<typeof useForm<IVisaForm>>>;
+
 export default function TravelForm() {
   const [travelerIds, setTravelerIds] = useState<number[]>([1]);
-  const formMethodsRef = useRef<Map<number, ReturnType<typeof useForm<IVisaForm>>>>(
-    new Map()
-  );
+  const formMethodsRef = useRef<FormMethodsRef>(new Map());
   const [isAllValid, setIsAllValid] = useState(false);
   const { isFormValid } = useFormValidation();
 
@@ -21,10 +22,9 @@ export default function TravelForm() {
       } else {
         formMethodsRef.current.set(id, methods);
       }
-    },
-    []
-  );
+    },[]);
 
+  //handle validation 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
 
@@ -33,13 +33,15 @@ export default function TravelForm() {
 
       timeoutId = setTimeout(async () => {
         const forms = Array.from(formMethodsRef.current.values());
+        // console.log("Forms:", forms);
         const valid = await isFormValid(forms);
         setIsAllValid(valid);
-      }, 100);
+      }, 500);
     };
 
     const forms = Array.from(formMethodsRef.current.values());
     const subscriptions = forms.map((methods) => methods.watch(handleValidation));
+    
 
     handleValidation();
 
@@ -49,9 +51,12 @@ export default function TravelForm() {
     };
   }, [travelerIds, isFormValid]);
 
+
+  //handle submit all
   const handleSubmitAll = async () => {
     try {
       const forms = Array.from(formMethodsRef.current.values());
+      // console.log("Forms:", forms);
       const isValid = await isFormValid(forms);
 
       if (!isValid) {
@@ -63,13 +68,16 @@ export default function TravelForm() {
       // Validate all forms
       const validationResults = await Promise.all(
         forms.map(async (methods) => {
-          const result = await methods.trigger();
+          // console.log("Methods:", methods);
+          const result = await methods.trigger(); //trigger validation
+          // console.log("Result:", result);
           if (!result) {
             console.log("Form validation errors:", methods.formState.errors);
           }
           return result;
         })
       );
+      // console.log("Validation Results:", validationResults);
 
       if (validationResults.some((result) => !result)) {
         throw new Error("Please check all required fields are filled correctly.");
@@ -127,7 +135,7 @@ export default function TravelForm() {
         </button>
       </div>
 
-      <div className="flex flex-col items-center gap-4">
+      <div className="flex flex-col items-center gap-4 mt-5">
         <button
           type="button"
           onClick={handleSubmitAll}
