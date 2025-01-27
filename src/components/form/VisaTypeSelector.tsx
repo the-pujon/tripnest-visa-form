@@ -16,7 +16,7 @@ export function VisaTypeSelector({ onVisaTypeChange }: VisaTypeSelectorProps) {
       value={currentVisaType}
     >
       <option value="">Select document type</option>
-      <option value="work">Job Holder&apos;s Documents</option>
+      <option value="jobHolder">Job Holder&apos;s Documents</option>
       <option value="business">Businessperson&apos;s Documents</option>
       <option value="student">Student&apos;s Documents</option>
       <option value="other">Other Documents</option>

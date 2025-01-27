@@ -78,7 +78,7 @@ export const STUDENT_DOCUMENTS = [
   
 ];
 
-export const WORK_DOCUMENTS = [
+export const JOB_HOLDER_DOCUMENTS = [
   {
     number: 1,
     label: "NOC Certificate",

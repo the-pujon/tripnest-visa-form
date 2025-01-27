@@ -12,7 +12,7 @@ import {
   GENERAL_DOCUMENTS,
   BUSINESS_DOCUMENTS,
   STUDENT_DOCUMENTS,
-  WORK_DOCUMENTS,
+  JOB_HOLDER_DOCUMENTS,
   OTHER_DOCUMENTS,
 } from "@/constants/documents";
 import { TravelerHeader } from "@/components/form/TravelerHeader";
@@ -101,7 +101,7 @@ const defaultFileUpload = { file: null, name: "", uploaded: false };
             travelLetter: defaultFileUpload,
             birthCertificate: defaultFileUpload,
           });
-        } else if (value === "work") {
+        } else if (value === "jobHolder") {
           formMethods.setValue("jobHolderDocuments", {
             nocCertificate: defaultFileUpload,
             officialId: defaultFileUpload,
@@ -151,7 +151,7 @@ const defaultFileUpload = { file: null, name: "", uploaded: false };
                 {formMethods.watch("visaType") === "jobHolder" && (
                   <DocumentSection
                     title="Job Holder Documents"
-                    documents={WORK_DOCUMENTS}
+                    documents={JOB_HOLDER_DOCUMENTS}
                     travelerId={id}
                   />
                 )}

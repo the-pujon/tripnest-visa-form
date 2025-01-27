@@ -6,11 +6,13 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import { TravelerFormSection } from "@/components/form/TavelerFormSection";
 import { useFormValidation } from "@/hooks/useFormValidation";
 import { SubmissionModal } from "@/components/modal/SubmissionModal";
+import toast from "react-hot-toast";
+import { useCreateVisaMutation } from "@/redux/features/visaApi";
 
 //type for the form methods ref
 type FormMethodsRef = Map<number, ReturnType<typeof useForm<IVisaForm>>>;
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+
 
 export default function TravelForm() {
   const [travelerIds, setTravelerIds] = useState<number[]>([1]);
@@ -19,6 +21,7 @@ export default function TravelForm() {
   const { isFormValid } = useFormValidation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [createVisa] = useCreateVisaMutation();
 
   const registerFormMethods = useCallback(
     (id: number, methods: ReturnType<typeof useForm<IVisaForm>> | null) => {
@@ -38,9 +41,9 @@ export default function TravelForm() {
 
       timeoutId = setTimeout(async () => {
         const forms = Array.from(formMethodsRef.current.values());
-        console.log("Forms to validate:", forms.length);
+        // console.log("Forms to validate:", forms.length);
         const valid = await isFormValid(forms);
-        console.log("Validation result:", valid);
+        // console.log("Validation result:", valid);
         setIsAllValid(valid);
       }, 500);
     };
@@ -63,24 +66,19 @@ export default function TravelForm() {
     setIsSubmitting(true);
     try {
       const forms = Array.from(formMethodsRef.current.values());
-      console.log("Number of forms to validate:", forms.length);
       
       const isValid = await isFormValid(forms);
-      console.log("Overall form validation result:", isValid);
 
       if (!isValid) {
-        throw new Error(
-          "Please fill all required fields and upload necessary documents for all travelers."
-        );
+        toast.error("Please fill all required fields and upload necessary documents for all travelers.");
+        return;
       }
 
       // Submit each traveler's application
       const submissions = Array.from(formMethodsRef.current.entries()).map(
-        async ([id, methods]) => {
-          console.log(`Processing form for traveler ${id}`);
+        async ([, methods]) => {
           const formData = new FormData();
           const values = methods.getValues();
-          console.log("Form Values:", values);
 
           // Create base form data object without document fields first
           const formDataObj = {
@@ -139,38 +137,31 @@ export default function TravelForm() {
           formData.append('data', JSON.stringify(formDataObj));
 
           // Log the form data for debugging
-          console.log("Form Data being sent:", {
-            formData: Object.fromEntries(formData.entries()),
-            jsonData: formDataObj
-          });
+          // console.log("Form Data being sent:", {
+          //   formData: Object.fromEntries(formData.entries()),
+          //   jsonData: formDataObj
+          // });
 
           try {
-            const response = await fetch(`${API_URL}/visa/create`, {
-              method: 'POST',
-              body: formData,
-            });
-
-            const responseData = await response.json();
-
-            if (!response.ok) {
-              throw new Error(responseData.message || 'Failed to submit visa application');
+            const responseData = await createVisa(formData);
+            if ('error' in responseData) {
+              // throw new Error(responseData.error?.data?.message || 'Failed to submit visa application');
+              toast.error( 'Failed to submit visa application');
             }
-
             return responseData;
           } catch (error) {
-            console.error('Error submitting visa application:', error);
             throw error;
           }
         }
       );
 
-      const results = await Promise.all(submissions);
-      console.log("Submission results:", results);
-      
+      await Promise.all(submissions);
+      toast.success("Visa applications submitted successfully. Please proceed to payment...");
       setShowSuccessModal(true);
+      
     } catch (error) {
       console.error("Submission error:", error);
-      alert(
+      toast.error(
         error instanceof Error
           ? error.message
           : "An error occurred while submitting the applications."

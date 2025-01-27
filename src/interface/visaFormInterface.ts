@@ -1,3 +1,5 @@
+export type VisaType = 'business' | 'student' | 'jobHolder' | 'other' | '';
+
 export interface IFileUpload {
     file: File | null;
     name: string;
@@ -20,31 +22,29 @@ export interface IFileUpload {
   }
   
   export interface IBusinessDocuments {
-    tradeLicense: IFileUpload;
-    notarizedId: IFileUpload;
-    memorandum: IFileUpload;
-    officePad: IFileUpload;
+    tradeLicense?: IFileUpload;
+    notarizedId?: IFileUpload;
+    memorandum?: IFileUpload;
+    officePad?: IFileUpload;
   }
   
   export interface IStudentDocuments {
-    studentId: IFileUpload;
-    travelLetter: IFileUpload;
-    birthCertificate: IFileUpload;
+    studentId?: IFileUpload;
+    travelLetter?: IFileUpload;
+    birthCertificate?: IFileUpload;
   }
   
   export interface IJobHolderDocuments {
-    nocCertificate: IFileUpload;
-    officialId: IFileUpload;
-    bmdcCertificate: IFileUpload;
-    barCouncilCertificate: IFileUpload;
-    retirementCertificate: IFileUpload;
+    nocCertificate?: IFileUpload;
+    officialId?: IFileUpload;
+    bmdcCertificate?: IFileUpload;
+    barCouncilCertificate?: IFileUpload;
+    retirementCertificate?: IFileUpload;
   }
   
   export interface IOtherDocuments {
-    marriageCertificate: IFileUpload;
+    marriageCertificate?: IFileUpload;
   }
-  
-  export type VisaType = 'business' | 'student' | 'jobHolder' | 'other' | '';
   
   export interface IVisaForm {
     givenName: string;
@@ -52,9 +52,9 @@ export interface IFileUpload {
     phone: string;
     email: string;
     address: string;
-    notes: string;
+    notes?: string;
     visaType: VisaType;
-    generalDocuments: IGeneralDocuments;
+    generalDocuments?: Record<string, IFileUpload>;
     businessDocuments?: IBusinessDocuments;
     studentDocuments?: IStudentDocuments;
     jobHolderDocuments?: IJobHolderDocuments;
