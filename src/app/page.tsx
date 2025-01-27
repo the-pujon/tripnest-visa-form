@@ -190,7 +190,7 @@ export default function TravelForm() {
   return (
     <>
       <div className="w-full max-w-5xl mx-auto py-10">
-        <div className="bg-white shadow-md rounded-lg overflow-hidden px-28 pb-10">
+        <div className="bg-white shadow-md rounded-lg overflow-hidden lg:px-28 px-0 pb-10">
           {travelerIds.map((id) => (
             <TravelerFormSection
               key={id}
@@ -202,7 +202,7 @@ export default function TravelForm() {
           ))}
           <button
             type="button"
-            className="text-[#FF6B00] hover:text-[#FF6B00]/80 font-semibold"
+            className="text-[#FF6B00] hover:text-[#FF6B00]/80 font-semibold pl-5"
             onClick={addTraveler}
           >
             + Add Traveler

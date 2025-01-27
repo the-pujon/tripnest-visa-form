@@ -1,3 +1,5 @@
+import { FaXmark } from "react-icons/fa6";
+
 interface SubmissionModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -6,11 +8,22 @@ interface SubmissionModalProps {
 export function SubmissionModal({ isOpen, onClose }: SubmissionModalProps) {
   if (!isOpen) return null;
 
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
   return (
-    <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center">
+    <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center"
+      onClick={handleBackdropClick}
+    >
       <div className="absolute top-32 w-full max-w-md bg-white rounded-md shadow-lg overflow-hidden">
         {/* Header */}
-        <div className="bg-[#CCE0FF] p-6">
+        <div className="bg-[#CCE0FF] p-6 relative">
+          <button onClick={onClose} className="absolute top-2 right-2 text-black hover:text-gray-800">
+            <FaXmark className="h-6 w-6" />
+          </button>
           <h2 className="text-xl font-semibold text-gray-800">Checkout Summary</h2>
         </div>
         
