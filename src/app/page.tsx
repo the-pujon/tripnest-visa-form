@@ -157,7 +157,39 @@ export default function TravelForm() {
 
       await Promise.all(submissions);
       toast.success("Visa applications submitted successfully. Please proceed to payment...");
+      
       setShowSuccessModal(true);
+
+       // Reset all forms after successful submission
+      // formMethodsRef.current.forEach((methods) => {
+      //     methods.reset();
+      // });
+        
+      //   // Reset to single traveler
+      //   setTravelerIds([1]);
+
+         // First reset all forms
+         formMethodsRef.current.forEach((methods) => {
+          methods.reset({
+            givenName: '',
+            surname: '',
+            phone: '',
+            email: '',
+            address: '',
+            notes: '',
+            visaType: '', // or whatever your default visa type is
+            generalDocuments: {},
+            businessDocuments: {},
+            studentDocuments: {},
+            jobHolderDocuments: {},
+            otherDocuments: {}
+          });
+        });
+        
+        // Then reset to single traveler
+        setTimeout(() => {
+          setTravelerIds([1]);
+        }, 0);
       
     } catch (error) {
       console.error("Submission error:", error);
