@@ -5,6 +5,7 @@ import type { IVisaForm } from "@/interface/visaFormInterface";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { TravelerFormSection } from "@/components/form/TavelerFormSection";
 import { useFormValidation } from "@/hooks/useFormValidation";
+import { SubmissionModal } from "@/components/modal/SubmissionModal";
 
 //type for the form methods ref
 type FormMethodsRef = Map<number, ReturnType<typeof useForm<IVisaForm>>>;
@@ -17,6 +18,7 @@ export default function TravelForm() {
   const [isAllValid, setIsAllValid] = useState(false);
   const { isFormValid } = useFormValidation();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const registerFormMethods = useCallback(
     (id: number, methods: ReturnType<typeof useForm<IVisaForm>> | null) => {
@@ -165,7 +167,7 @@ export default function TravelForm() {
       const results = await Promise.all(submissions);
       console.log("Submission results:", results);
       
-      alert("All visa applications have been submitted successfully!");
+      setShowSuccessModal(true);
     } catch (error) {
       console.error("Submission error:", error);
       alert(
@@ -176,6 +178,11 @@ export default function TravelForm() {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleCloseModal = () => {
+    setShowSuccessModal(false);
+    // Optionally reset form or redirect
   };
 
   const addTraveler = () => {
@@ -190,43 +197,50 @@ export default function TravelForm() {
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto py-10">
-      <div className="bg-white shadow-md rounded-lg overflow-hidden px-28 pb-10">
-        {travelerIds.map((id) => (
-          <TravelerFormSection
-            key={id}
-            id={id}
-            onRemove={removeTraveler}
-            isFirst={id === 1}
-            onRegisterFormMethods={(methods) => registerFormMethods(id, methods)}
-          />
-        ))}
-        <button
-          type="button"
-          className="text-[#FF6B00] hover:text-[#FF6B00]/80 font-semibold"
-          onClick={addTraveler}
-        >
-          + Add Traveler
-        </button>
-      </div>
+    <>
+      <div className="w-full max-w-5xl mx-auto py-10">
+        <div className="bg-white shadow-md rounded-lg overflow-hidden px-28 pb-10">
+          {travelerIds.map((id) => (
+            <TravelerFormSection
+              key={id}
+              id={id}
+              onRemove={removeTraveler}
+              isFirst={id === 1}
+              onRegisterFormMethods={(methods) => registerFormMethods(id, methods)}
+            />
+          ))}
+          <button
+            type="button"
+            className="text-[#FF6B00] hover:text-[#FF6B00]/80 font-semibold"
+            onClick={addTraveler}
+          >
+            + Add Traveler
+          </button>
+        </div>
 
-      <div className="flex flex-col items-center gap-4 mt-5">
-        <button
-          type="button"
-          onClick={handleSubmitAll}
-          className="self-center py-2 px-11 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-secondary hover:bg-primary/70 transition-all duration-500 focus:outline-none focus:ring-0 focus:ring-offset-0 disabled:bg-gray-400 disabled:cursor-not-allowed"
-          disabled={!isAllValid || isSubmitting}
-        >
-          {isSubmitting ? (
-            <span className="flex items-center gap-2">
-              <span className="animate-spin">⏳</span>
-              Submitting...
-            </span>
-          ) : (
-            "Submit All Documents"
-          )}
-        </button>
+        <div className="flex flex-col items-center gap-4 mt-5">
+          <button
+            type="button"
+            onClick={handleSubmitAll}
+            className="self-center py-2 px-11 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-secondary hover:bg-primary/70 transition-all duration-500 focus:outline-none focus:ring-0 focus:ring-offset-0 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            disabled={!isAllValid || isSubmitting}
+          >
+            {isSubmitting ? (
+              <span className="flex items-center gap-2">
+                <span className="animate-spin">⏳</span>
+                Submitting...
+              </span>
+            ) : (
+              "Submit All Documents"
+            )}
+          </button>
+        </div>
       </div>
-    </div>
+      
+      <SubmissionModal 
+        isOpen={showSuccessModal} 
+        onClose={handleCloseModal} 
+      />
+    </>
   );
 }
