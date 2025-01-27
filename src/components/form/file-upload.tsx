@@ -4,6 +4,7 @@ import type { IFileUpload } from "@/interface/visaFormInterface";
 import { TbTrash } from "react-icons/tb";
 import { IoIosCheckmarkCircle } from "react-icons/io";
 import { RiUploadCloud2Line } from "react-icons/ri";
+import { toast } from "react-hot-toast";
 
 interface FileUploadProps {
   number: number;
@@ -20,6 +21,13 @@ export function FileUpload({ number, label, name, travelerId }: FileUploadProps)
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      const maxSize = 5 * 1024 * 1024;
+      if (file.size > maxSize) {
+        toast.error('File size must be less than 5MB');
+        e.target.value = '';
+        return;
+      }
+
       setValue(
         name,
         {
@@ -101,6 +109,7 @@ export function FileUpload({ number, label, name, travelerId }: FileUploadProps)
           name={`${name}-${travelerId}`}
           className="hidden"
           onChange={handleFileChange}
+          accept=".pdf,.jpg,.jpeg,.png"
         />
         <label htmlFor={inputId}>
           <span className="inline-flex gap-2 items-center px-4 py-2 border border-gray-300 rounded-md bg-white hover:bg-gray-50 cursor-pointer">
@@ -108,6 +117,7 @@ export function FileUpload({ number, label, name, travelerId }: FileUploadProps)
             <span className="text-sm font-medium text-[#FF6B00]">Upload</span>
           </span>
         </label>
+        <p className="text-xs text-gray-500 mt-1">Max size: 5MB</p>
       </div>
     </div>
   );
