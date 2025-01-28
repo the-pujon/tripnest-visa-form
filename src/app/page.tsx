@@ -41,9 +41,7 @@ export default function TravelForm() {
 
       timeoutId = setTimeout(async () => {
         const forms = Array.from(formMethodsRef.current.values());
-        // console.log("Forms to validate:", forms.length);
         const valid = await isFormValid(forms);
-        // console.log("Validation result:", valid);
         setIsAllValid(valid);
       }, 500);
     };
@@ -51,7 +49,6 @@ export default function TravelForm() {
     const forms = Array.from(formMethodsRef.current.values());
     const subscriptions = forms.map((methods) => methods.watch(handleValidation));
     
-
     handleValidation();
 
     return () => {
@@ -74,123 +71,151 @@ export default function TravelForm() {
         return;
       }
 
-      // Submit each traveler's application
-      const submissions = Array.from(formMethodsRef.current.entries()).map(
-        async ([, methods]) => {
-          const formData = new FormData();
-          const values = methods.getValues();
+      // Get primary traveler's form (ID: 1) and sub-travelers
+      const primaryTravelerForm = formMethodsRef.current.get(1);
+      const subTravelerForms = Array.from(formMethodsRef.current.entries())
+        .filter(([id]) => id !== 1)
+        .map(([, methods]) => methods);
 
-          // Create base form data object without document fields first
-          const formDataObj = {
-            givenName: values.givenName,
-            surname: values.surname,
-            phone: values.phone,
-            email: values.email,
-            address: values.address,
-            notes: values.notes || '',
-            visaType: values.visaType
-          };
+      if (!primaryTravelerForm) {
+        throw new Error("Primary traveler's form not found");
+      }
 
-          // Add files to FormData first
-          if (values.generalDocuments) {
-            Object.entries(values.generalDocuments).forEach(([key, file]) => {
-              if (file?.file instanceof File) {
-                formData.append(key, file.file);
-              }
-            });
+      const primaryTravelerData = primaryTravelerForm.getValues();
+      const subTravelersData = subTravelerForms.map((methods) => methods.getValues());
+
+      // Create the final form data
+      const formData = new FormData();
+
+      // Process primary traveler's files
+      if (primaryTravelerData.generalDocuments) {
+        Object.entries(primaryTravelerData.generalDocuments).forEach(([key, file]) => {
+          if (file?.file instanceof File) {
+            formData.append(key, file.file);
           }
-
-          // Add type-specific documents based on visa type
-          if (values.visaType === 'business' && values.businessDocuments) {
-            Object.entries(values.businessDocuments).forEach(([key, file]) => {
-              if (file?.file instanceof File) {
-                formData.append(key, file.file);
-              }
-            });
-          }
-
-          if (values.visaType === 'student' && values.studentDocuments) {
-            Object.entries(values.studentDocuments).forEach(([key, file]) => {
-              if (file?.file instanceof File) {
-                formData.append(key, file.file);
-              }
-            });
-          }
-
-          if (values.visaType === 'jobHolder' && values.jobHolderDocuments) {
-            Object.entries(values.jobHolderDocuments).forEach(([key, file]) => {
-              if (file?.file instanceof File) {
-                formData.append(key, file.file);
-              }
-            });
-          }
-
-          if (values.visaType === 'other' && values.otherDocuments) {
-            Object.entries(values.otherDocuments).forEach(([key, file]) => {
-              if (file?.file instanceof File) {
-                formData.append(key, file.file);
-              }
-            });
-          }
-
-          // Important: Append the data first
-          formData.append('data', JSON.stringify(formDataObj));
-
-          // Log the form data for debugging
-          // console.log("Form Data being sent:", {
-          //   formData: Object.fromEntries(formData.entries()),
-          //   jsonData: formDataObj
-          // });
-
-          try {
-            const responseData = await createVisa(formData);
-            if ('error' in responseData) {
-              // throw new Error(responseData.error?.data?.message || 'Failed to submit visa application');
-              toast.error( 'Failed to submit visa application');
-            }
-            return responseData;
-          } catch (error) {
-            throw error;
-          }
-        }
-      );
-
-      await Promise.all(submissions);
-      toast.success("Visa applications submitted successfully. Please proceed to payment...");
-      
-      setShowSuccessModal(true);
-
-       // Reset all forms after successful submission
-      // formMethodsRef.current.forEach((methods) => {
-      //     methods.reset();
-      // });
-        
-      //   // Reset to single traveler
-      //   setTravelerIds([1]);
-
-         // First reset all forms
-         formMethodsRef.current.forEach((methods) => {
-          methods.reset({
-            givenName: '',
-            surname: '',
-            phone: '',
-            email: '',
-            address: '',
-            notes: '',
-            visaType: '', // or whatever your default visa type is
-            generalDocuments: {},
-            businessDocuments: {},
-            studentDocuments: {},
-            jobHolderDocuments: {},
-            otherDocuments: {}
-          });
         });
-        
-        // Then reset to single traveler
-        setTimeout(() => {
-          setTravelerIds([1]);
-        }, 0);
-      
+      }
+
+      // Process primary traveler's type-specific documents
+      if (primaryTravelerData.visaType === 'business' && primaryTravelerData.businessDocuments) {
+        Object.entries(primaryTravelerData.businessDocuments).forEach(([key, file]) => {
+          if (file?.file instanceof File) {
+            formData.append(key, file.file);
+          }
+        });
+      }
+
+      if (primaryTravelerData.visaType === 'student' && primaryTravelerData.studentDocuments) {
+        Object.entries(primaryTravelerData.studentDocuments).forEach(([key, file]) => {
+          if (file?.file instanceof File) {
+            formData.append(key, file.file);
+          }
+        });
+      }
+
+      if (primaryTravelerData.visaType === 'jobHolder' && primaryTravelerData.jobHolderDocuments) {
+        Object.entries(primaryTravelerData.jobHolderDocuments).forEach(([key, file]) => {
+          if (file?.file instanceof File) {
+            formData.append(key, file.file);
+          }
+        });
+      }
+
+      if (primaryTravelerData.visaType === 'other' && primaryTravelerData.otherDocuments) {
+        Object.entries(primaryTravelerData.otherDocuments).forEach(([key, file]) => {
+          if (file?.file instanceof File) {
+            formData.append(key, file.file);
+          }
+        });
+      }
+
+      // Process sub-travelers' files
+      subTravelersData.forEach((traveler, index) => {
+        if (traveler.generalDocuments) {
+          Object.entries(traveler.generalDocuments).forEach(([key, file]) => {
+            if (file?.file instanceof File) {
+              formData.append(`subTravelers[${index}].${key}`, file.file);
+            }
+          });
+        }
+        // Process type-specific documents for sub-travelers
+        if (traveler.visaType === 'business' && traveler.businessDocuments) {
+          Object.entries(traveler.businessDocuments).forEach(([key, file]) => {
+            if (file?.file instanceof File) {
+              formData.append(`subTravelers[${index}].${key}`, file.file);
+            }
+          });
+        }
+
+        if (traveler.visaType === 'student' && traveler.studentDocuments) {
+          Object.entries(traveler.studentDocuments).forEach(([key, file]) => {
+            if (file?.file instanceof File) {
+              formData.append(`subTravelers[${index}].${key}`, file.file);
+            }
+          });
+        }
+
+        if (traveler.visaType === 'jobHolder' && traveler.jobHolderDocuments) {
+          Object.entries(traveler.jobHolderDocuments).forEach(([key, file]) => {
+            if (file?.file instanceof File) {
+              formData.append(`subTravelers[${index}].${key}`, file.file);
+            }
+          });
+        }
+
+        if (traveler.visaType === 'other' && traveler.otherDocuments) {
+          Object.entries(traveler.otherDocuments).forEach(([key, file]) => {
+            if (file?.file instanceof File) {
+              formData.append(`subTravelers[${index}].${key}`, file.file);
+            }
+          });
+        }
+      });
+
+      // Create the final data object
+      const finalData = {
+        ...primaryTravelerData,
+        subTravelers: subTravelersData
+      };
+
+      // Append the JSON data
+      formData.append('data', JSON.stringify(finalData));
+
+      console.log(finalData)
+
+      // try {
+      //   const responseData = await createVisa(formData);
+      //   if ('error' in responseData) {
+      //     toast.error('Failed to submit visa application');
+      //   } else {
+      //     toast.success("Visa applications submitted successfully. Please proceed to payment...");
+      //     setShowSuccessModal(true);
+          
+      //     // Reset forms after successful submission
+      //     formMethodsRef.current.forEach((methods) => {
+      //       methods.reset({
+      //         givenName: '',
+      //         surname: '',
+      //         phone: '',
+      //         email: '',
+      //         address: '',
+      //         notes: '',
+      //         visaType: '',
+      //         generalDocuments: {},
+      //         businessDocuments: {},
+      //         studentDocuments: {},
+      //         jobHolderDocuments: {},
+      //         otherDocuments: {}
+      //       });
+      //     });
+          
+      //     setTimeout(() => {
+      //       setTravelerIds([1]);
+      //     }, 0);
+      //   }
+      // } catch (error) {
+      //   throw error;
+      // }
     } catch (error) {
       console.error("Submission error:", error);
       toast.error(
