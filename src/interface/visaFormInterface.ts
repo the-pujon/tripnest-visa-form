@@ -47,6 +47,7 @@ export interface IFileUpload {
   }
   
   export interface IVisaForm {
+    _id?: string;
     givenName: string;
     surname: string;
     phone: string;
