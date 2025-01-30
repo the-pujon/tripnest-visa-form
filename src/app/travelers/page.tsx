@@ -2,6 +2,7 @@
 
 import { IVisaForm } from "@/interface/visaFormInterface";
 import { useDeleteVisaMutation, useGetVisaQuery } from "@/redux/features/visaApi";
+import Link from "next/link";
 import toast from "react-hot-toast";
 import { FaEye, FaTrash, FaPencilAlt, FaCheck, FaTimes } from "react-icons/fa";
 
@@ -117,9 +118,9 @@ export default function TravelersPage() {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <div className="flex space-x-3">
-                    <button className="text-blue-600 hover:text-blue-900">
+                    <Link href={`/travelers/${traveler._id}`} className="text-blue-600 hover:text-blue-900">
                       <FaEye className="text-xl" />
-                    </button>
+                    </Link>
                     <button className="text-green-600 hover:text-green-900">
                       <FaPencilAlt className="text-xl" />
                     </button>
