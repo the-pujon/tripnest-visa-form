@@ -37,12 +37,12 @@ const TravelerDetails = () => {
     );
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const DocumentSection = ({
     title,
     documents,
   }: {
     title: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     documents: any;
   }) => (
     <div className="mt-6">
@@ -72,11 +72,11 @@ const TravelerDetails = () => {
     </div>
   );
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const TravelerInfo = ({
     traveler,
     isSubTraveler = false,
   }: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     traveler: any;
     isSubTraveler?: boolean;
   }) => (
