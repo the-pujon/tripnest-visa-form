@@ -121,9 +121,9 @@ export default function TravelersPage() {
                     <Link href={`/travelers/${traveler._id}`} className="text-blue-600 hover:text-blue-900">
                       <FaEye className="text-xl" />
                     </Link>
-                    <button className="text-green-600 hover:text-green-900">
+                    <Link href={`/travelers/edit/${traveler._id}`} className="text-green-600 hover:text-green-900">
                       <FaPencilAlt className="text-xl" />
-                    </button>
+                    </Link>
                     <button onClick={() => handleDelete(traveler._id)} className="text-red-600 hover:text-red-900">
                       <FaTrash className="text-xl" />
                     </button>

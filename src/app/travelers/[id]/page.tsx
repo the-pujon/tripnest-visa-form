@@ -1,13 +1,15 @@
 "use client";
-import { useGetVisaByIdQuery } from "@/redux/features/visaApi";
+import { useDeleteSubTravelerMutation, useGetVisaByIdQuery } from "@/redux/features/visaApi";
 import { useParams } from "next/navigation";
 import React from "react";
 import { FaFilePdf } from "react-icons/fa";
 import Image from "next/image";
+import toast from "react-hot-toast";
 
 const TravelerDetails = () => {
   const { id } = useParams();
   const { data: visaData } = useGetVisaByIdQuery(id as string);
+  const [deleteSub] = useDeleteSubTravelerMutation();
   const visa = visaData?.data;
 
   const DocumentLink = ({
@@ -89,8 +91,8 @@ const TravelerDetails = () => {
           <button
             className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
             onClick={() => {
-              // Add delete functionality here
-              console.log("Delete subtraveler");
+              deleteSub({ id: visa._id, subTravelerId: traveler._id });
+              toast.success("Subtraveler Deleted succesfully ")
             }}
           >
             Delete
