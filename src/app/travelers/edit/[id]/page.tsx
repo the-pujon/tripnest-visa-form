@@ -1,10 +1,9 @@
 "use client";
 
-import { useForm, UseFormReturn } from "react-hook-form";
+import { UseFormReturn } from "react-hook-form";
 import type { IVisaForm } from "@/interface/visaFormInterface";
-import { useEffect, useState, useRef, useCallback } from "react";
+import {useState, useRef, useCallback } from "react";
 import { TravelerFormSection } from "@/components/form/TavelerFormSection";
-import { useFormValidation } from "@/hooks/useFormValidation";
 import toast from "react-hot-toast";
 import { useGetVisaByIdQuery, useUpdateVisaMutation } from "@/redux/features/visaApi";
 import { useParams, useRouter } from "next/navigation";
@@ -58,7 +57,7 @@ export default function EditTravelForm() {
       }));
 
       // Handle document files if they exist
-      const documentTypes = ['generalDocuments', 'businessDocuments', 'studentDocuments', 'jobHolderDocuments', 'otherDocuments'];
+      const documentTypes = ['generalDocuments', 'businessDocuments', 'studentDocuments', 'jobHolderDocuments', 'otherDocuments'] as const;
       documentTypes.forEach(docType => {
         const documents = values[docType];
         if (documents) {
@@ -81,6 +80,7 @@ export default function EditTravelForm() {
         toast.success('Updated successfully');
         router.back();
       }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error('Update error:', error);
       toast.error(error?.data?.message || 'Something went wrong');

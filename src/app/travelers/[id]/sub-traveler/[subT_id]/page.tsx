@@ -1,12 +1,12 @@
 "use client";
 
-import { useForm, UseFormReturn } from "react-hook-form";
-import type { IVisaForm } from "@/interface/visaFormInterface";
-import { useEffect, useState, useRef, useCallback } from "react";
+import { UseFormReturn } from "react-hook-form";
+import type { IFileUpload, IVisaForm } from "@/interface/visaFormInterface";
+// import type { IFileUpload } from "@/interface/fileUploadInterface"; // Add this line
+import { useState, useRef, useCallback } from "react";
 import { TravelerFormSection } from "@/components/form/TavelerFormSection";
-import { useFormValidation } from "@/hooks/useFormValidation";
 import toast from "react-hot-toast";
-import { useGetSubTravelerByIdQuery, useGetVisaByIdQuery, useUpdateSubTravelerMutation, useUpdateVisaMutation } from "@/redux/features/visaApi";
+import { useGetSubTravelerByIdQuery, useUpdateSubTravelerMutation } from "@/redux/features/visaApi";
 import { useParams, useRouter } from "next/navigation";
 
 export default function UpdateSubTravelForm() {
@@ -61,11 +61,12 @@ export default function UpdateSubTravelForm() {
       }));
 
       // Handle document files if they exist
-      const documentTypes = ['generalDocuments', 'businessDocuments', 'studentDocuments', 'jobHolderDocuments', 'otherDocuments'];
-      documentTypes.forEach(docType => {
-        const documents = values[docType];
-        if (documents) {
-          Object.entries(documents).forEach(([key, value]) => {
+      const documentTypes = ['generalDocuments', 'businessDocuments', 'studentDocuments', 'jobHolderDocuments', 'otherDocuments'] as const;
+      
+      documentTypes.forEach((docType) => {
+        const documents = values[docType as keyof IVisaForm];
+        if (documents && typeof documents === 'object') {
+          Object.entries(documents as Record<string, IFileUpload>).forEach(([key, value]) => {
             if (value?.file) {
               formData.append(`subTraveler_${key}`, value.file);
             }
@@ -83,8 +84,9 @@ export default function UpdateSubTravelForm() {
       
       if (response.success) {
         toast.success('Updated successfully');
-        // router.back();
+        router.back();
       }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error('Update error:', error);
       toast.error(error?.data?.message || 'Something went wrong');
@@ -126,14 +128,3 @@ export default function UpdateSubTravelForm() {
     </div>
   );
 }
-
-
-
-// export const SubTravelerUpdate = () => {
-  
-//   return (
-//     <div>
-//       sub traveler update
-//     </div>
-//   )
-// }
