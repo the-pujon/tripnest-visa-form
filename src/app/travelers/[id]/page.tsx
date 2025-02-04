@@ -5,6 +5,7 @@ import React from "react";
 import { FaFilePdf } from "react-icons/fa";
 import Image from "next/image";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 const TravelerDetails = () => {
   const { id } = useParams();
@@ -88,7 +89,11 @@ const TravelerDetails = () => {
           {isSubTraveler ? "Sub Traveler" : "Main Traveler"} Information
         </h2>
         {isSubTraveler && (
-          <button
+        <div className="flex items-center">
+          <Link href={`/travelers/${visa._id}/sub-traveler/${traveler._id}`} className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors mr-2">
+            Edit
+          </Link>
+            <button
             className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
             onClick={() => {
               deleteSub({ id: visa._id, subTravelerId: traveler._id });
@@ -97,6 +102,7 @@ const TravelerDetails = () => {
           >
             Delete
           </button>
+        </div>
         )}
       </div>
 
@@ -140,6 +146,33 @@ const TravelerDetails = () => {
             documents={traveler.otherDocuments}
           />
         )}
+
+        {
+          traveler.businessDocuments && (
+            <DocumentSection
+              title="Business Documents"
+              documents={traveler.businessDocuments}
+            />
+          )
+        }
+
+        {
+          traveler.studentDocuments && (
+            <DocumentSection
+              title="Student Documents"
+              documents={traveler.studentDocuments}
+            />
+          )
+        }
+
+        {
+          traveler.jobHolderDocuments && (
+            <DocumentSection
+              title="Job Holder Documents"
+              documents={traveler.jobHolderDocuments}
+            />
+          )
+        }
     </div>
   );
 
