@@ -131,6 +131,7 @@ export function TravelerFormSection({
                 title="General Documents (Mandatory for all E-Visa)"
                 documents={GENERAL_DOCUMENTS}
                 travelerId={id}
+                documentData={defaultValues?.generalDocuments}
               />
 
               {formMethods.watch("visaType") === "business" && (
@@ -138,6 +139,7 @@ export function TravelerFormSection({
                   title="Businessperson Documents"
                   documents={BUSINESS_DOCUMENTS}
                   travelerId={id}
+                  documentData={defaultValues?.businessDocuments}
                 />
               )}
 
@@ -146,6 +148,7 @@ export function TravelerFormSection({
                   title="Student Documents"
                   documents={STUDENT_DOCUMENTS}
                   travelerId={id}
+                  documentData={defaultValues?.studentDocuments}
                 />
               )}
 
@@ -154,6 +157,7 @@ export function TravelerFormSection({
                   title="Job Holder Documents"
                   documents={JOB_HOLDER_DOCUMENTS}
                   travelerId={id}
+                  documentData={defaultValues?.jobHolderDocuments}
                 />
               )}
 
@@ -162,6 +166,7 @@ export function TravelerFormSection({
                   title="Other Documents"
                   documents={OTHER_DOCUMENTS}
                   travelerId={id}
+                  documentData={defaultValues?.otherDocuments}
                 />
               )}
             </form>

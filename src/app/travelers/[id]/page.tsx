@@ -13,6 +13,8 @@ const TravelerDetails = () => {
   const [deleteSub] = useDeleteSubTravelerMutation();
   const visa = visaData?.data;
 
+  console.log(visaData)
+
   const DocumentLink = ({
     url,
     type,

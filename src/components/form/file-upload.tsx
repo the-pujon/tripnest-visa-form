@@ -1,4 +1,4 @@
-import type { ChangeEvent } from "react";
+import { useEffect, useState, type ChangeEvent } from "react";
 import { useFormContext } from "react-hook-form";
 import type { IFileUpload } from "@/interface/visaFormInterface";
 import { TbTrash } from "react-icons/tb";
@@ -10,13 +10,23 @@ interface FileUploadProps {
   number: number;
   label: string;
   name: string;
-  travelerId: number;
+  travelerId: number; 
+  existingFile?: string;
 }
 
-export function FileUpload({ number, label, name, travelerId }: FileUploadProps) {
+export function FileUpload({ number, label, name, travelerId, existingFile }: FileUploadProps) {
   const { setValue, watch } = useFormContext();
   const fileData = watch(name) as IFileUpload;
   const inputId = `${name}-${travelerId}`;
+  const [fileExists, setFileExists] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (existingFile) {
+      setFileExists(true);
+    }
+  }, [existingFile]);
+
+  console.log(fileExists)
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -56,7 +66,46 @@ export function FileUpload({ number, label, name, travelerId }: FileUploadProps)
       },
       { shouldValidate: true }
     );
+
+    setFileExists(false);
   };
+
+  // if(fileExists){
+  //   <div className="space-y-1 w-full">
+  //   <div className="flex items-start justify-between">
+  //     <div className="space-y-1 w-full">
+  //       <div className="flex gap-2 text-gray-900">
+  //         <span>{number}.</span>
+  //         <span>{label}</span>
+  //       </div>
+
+  //       <div className="grid grid-cols-2 gap-2">
+  //         <span className="text-sm">
+  //           {existingFile!.length > 30
+  //             ? existingFile!.slice(0, 20) + "..."
+  //             : existingFile}
+  //         </span>
+  //         <button
+  //           type="button"
+  //           onClick={handleDelete}
+  //           className="text-[#FF6B00] hover:text-[#FF6B00]/80 w-full flex justify-end"
+  //         >
+  //           <TbTrash />
+  //         </button>
+  //         {/* <span className="text-xs text-gray-400">
+  //           {Math.round(fileData!.size!.current / 1024)} KB of{" "}
+  //           {Math.round(fileData!.size!.total / 1024)} KB
+  //         </span> */}
+  //         <div className="flex items-center gap-1 justify-end">
+  //           <IoIosCheckmarkCircle className="text-green-500" />
+  //           <span className="text-xs">Uploaded</span>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   </div>
+  // </div>
+  // }
+  
 
   if (fileData?.uploaded) {
     return (
@@ -97,7 +146,41 @@ export function FileUpload({ number, label, name, travelerId }: FileUploadProps)
   }
 
   return (
-    <div className="flex justify-between items-start">
+   <>
+    {
+      fileExists ?  <div className="space-y-1 w-full">
+      <div className="flex items-start justify-between">
+        <div className="space-y-1 w-full">
+          <div className="flex gap-2 text-gray-900">
+            <span>{number}.</span>
+            <span>{label}</span>
+          </div>
+  
+          <div className="grid grid-cols-2 gap-2">
+            <span className="text-sm">
+              {existingFile!.length > 40
+                ? existingFile!.slice(0, 40) + "..."
+                : existingFile}
+            </span>
+            <button
+              type="button"
+              onClick={handleDelete}
+              className="text-[#FF6B00] hover:text-[#FF6B00]/80 w-full flex justify-end"
+            >
+              <TbTrash />
+            </button>
+            <span className="text-xs text-gray-400">
+              {/* {Math.round(fileData!.size!.current / 1024)} KB of{" "}
+              {Math.round(fileData!.size!.total / 1024)} KB */}
+            </span>
+            <div className="flex items-center gap-1 justify-end">
+              <IoIosCheckmarkCircle className="text-green-500" />
+              <span className="text-xs">Uploaded</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> : <div className="flex justify-between items-start">
       <div className="flex gap-2">
         <span className="text-sm text-gray-900">{number}.</span>
         <span className="text-sm text-gray-900">{label}</span>
@@ -120,5 +203,8 @@ export function FileUpload({ number, label, name, travelerId }: FileUploadProps)
         <p className="text-xs text-gray-500 mt-1">Max size: 5MB</p>
       </div>
     </div>
+    }
+   </>
+    
   );
 }
