@@ -98,8 +98,8 @@ export default function EditTravelForm() {
   }
 
   return (
-    <div className="container mx-auto py-8">
-      <div className="space-y-8">
+    <div className="w-full max-w-5xl mx-auto py-10">
+      <div className="bg-white shadow-md rounded-lg overflow-hidden lg:px-28 px-0 pb-10 space-y-8">
         <TravelerFormSection
           key={1}
           id={1}
@@ -113,7 +113,7 @@ export default function EditTravelForm() {
             type="button"
             onClick={handleSubmitAll}
             disabled={isSubmitting}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
+            className="px-4 py-2 bg-secondary text-white rounded hover:bg-secondary/90 disabled:opacity-50"
           >
             {isSubmitting ? 'Updating...' : 'Update'}
           </button>
