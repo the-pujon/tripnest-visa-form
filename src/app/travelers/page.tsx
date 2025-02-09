@@ -74,36 +74,36 @@ export default function TravelersPage() {
         <table className="min-w-full table-auto">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Visa Type</th>
+              <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+              <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
+              <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Visa Type</th>
               {requiredDocs.map(doc => (
-                <th key={doc.key} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th key={doc.key} className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   {doc.label}
                 </th>
               ))}
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sub Travelers</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sub Travelers</th>
+              <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {data?.data.map((traveler: Traveler) => (
               <tr key={traveler._id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-3 py-4 whitespace-nowrap">
                   <div className="text-sm font-medium text-gray-900">{traveler.givenName}</div>
                   <div className="text-sm text-gray-500">{traveler.surname}</div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-3 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-900">{traveler.email}</div>
                   <div className="text-sm text-gray-500">{traveler.phone}</div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-3 py-4 whitespace-nowrap">
                   <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                     {traveler.visaType}
                   </span>
                 </td>
                 {requiredDocs.map(doc => (
-                  <td key={doc.key} className="px-6 py-4 whitespace-nowrap text-center">
+                  <td key={doc.key} className="px-3 py-4 whitespace-nowrap text-center">
                     {traveler.generalDocuments?.[doc.key as keyof GeneralDocuments]?.url ? (
                       <FaCheck className="text-green-500 text-sm mx-auto" />
                     ) : (
@@ -111,12 +111,12 @@ export default function TravelersPage() {
                     )}
                   </td>
                 ))}
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-3 py-4 whitespace-nowrap">
                   <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
                     {traveler.subTravelers?.length || 0}
                   </span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <td className="px-3 py-4 whitespace-nowrap text-sm font-medium">
                   <div className="flex space-x-3">
                     <Link href={`/travelers/${traveler._id}`} className="text-blue-600 hover:text-blue-900">
                       <FaEye className="text-xl" />

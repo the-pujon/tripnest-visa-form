@@ -196,27 +196,27 @@ console.log('FormData as object:', formDataObject);
           console.log(data)
           
           // Reset all forms
-          // formMethodsRef.current.forEach((methods) => {
-          //   methods.reset({
-          //     givenName: '',
-          //     surname: '',
-          //     phone: '',
-          //     email: '',
-          //     address: '',
-          //     notes: '',
-          //     visaType: '',
-          //     generalDocuments: {},
-          //     businessDocuments: {},
-          //     studentDocuments: {},
-          //     jobHolderDocuments: {},
-          //     otherDocuments: {}
-          //   });
-          // });
+          formMethodsRef.current.forEach((methods) => {
+            methods.reset({
+              givenName: '',
+              surname: '',
+              phone: '',
+              email: '',
+              address: '',
+              notes: '',
+              visaType: '',
+              generalDocuments: {},
+              businessDocuments: {},
+              studentDocuments: {},
+              jobHolderDocuments: {},
+              otherDocuments: {}
+            });
+          });
           
-          // // Reset to single traveler
-          // setTimeout(() => {
-          //   setTravelerIds([1]);
-          // }, 0);
+          // Reset to single traveler
+          setTimeout(() => {
+            setTravelerIds([1]);
+          }, 0);
         }
       } catch (error) {
         throw error;

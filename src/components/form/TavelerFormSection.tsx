@@ -40,8 +40,7 @@ export function TravelerFormSection({
 
   const formMethods = useForm<IVisaForm>({
     resolver: zodResolver(travelerFormSchema),
-    mode: "onSubmit",
-    reValidateMode: "onBlur",
+    mode: "onChange",
     defaultValues: defaultValues || {
       givenName: "",
       surname: "",
@@ -68,12 +67,38 @@ export function TravelerFormSection({
     },
   });
 
+  // Update form values when defaultValues change
+  useEffect(() => {
+    if (defaultValues) {
+      const formValues = {
+        ...defaultValues,
+        generalDocuments: {
+          passportCopy: { ...defaultFileUpload, ...defaultValues.generalDocuments?.passportCopy },
+          passportPhoto: { ...defaultFileUpload, ...defaultValues.generalDocuments?.passportPhoto },
+          bankStatement: { ...defaultFileUpload, ...defaultValues.generalDocuments?.bankStatement },
+          bankSolvency: { ...defaultFileUpload, ...defaultValues.generalDocuments?.bankSolvency },
+          visitingCard: { ...defaultFileUpload, ...defaultValues.generalDocuments?.visitingCard },
+          hotelBooking: { ...defaultFileUpload, ...defaultValues.generalDocuments?.hotelBooking },
+          airTicket: { ...defaultFileUpload, ...defaultValues.generalDocuments?.airTicket },
+        },
+        businessDocuments: defaultValues.businessDocuments,
+        studentDocuments: defaultValues.studentDocuments,
+        jobHolderDocuments: defaultValues.jobHolderDocuments,
+        otherDocuments: {
+          marriageCertificate: { ...defaultFileUpload, ...defaultValues.otherDocuments?.marriageCertificate },
+        },
+      };
+      formMethods.reset(formValues);
+    }
+  }, [defaultValues]);
+
+  // Register form methods with parent component
   useEffect(() => {
     onRegisterFormMethods(formMethods);
     return () => {
       onRegisterFormMethods(null);
     };
-  }, [formMethods, id, onRegisterFormMethods]);
+  }, [formMethods, onRegisterFormMethods]);
 
   const handleVisaTypeChange = useCallback(
     (value: string) => {

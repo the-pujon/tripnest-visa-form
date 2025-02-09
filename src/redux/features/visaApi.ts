@@ -72,9 +72,19 @@ const visaApi = baseApi.injectEndpoints({
             }),
             providesTags: ["visa"],
         }),
+
+        updatePrimaryTraveler: builder.mutation({
+            query: ({ id, data }) => ({
+                url: `/visa/${id}/primary-traveler`,
+                method: "PUT",
+                body: data,
+            }),
+            invalidatesTags: ["visa"],
+        }),
     }),
 })
 
 
-export const { useCreateVisaMutation, useGetVisaQuery, useGetVisaByIdQuery, useUpdateVisaMutation, useDeleteVisaMutation, useDeleteSubTravelerMutation, useUpdateSubTravelerMutation, useGetSubTravelerByIdQuery } = visaApi;
+export const { useCreateVisaMutation, useGetVisaQuery, useGetVisaByIdQuery, useUpdateVisaMutation, useDeleteVisaMutation, useDeleteSubTravelerMutation, useUpdateSubTravelerMutation, useGetSubTravelerByIdQuery, useUpdatePrimaryTravelerMutation } = visaApi;
+// export const { useCreateVisaMutation, useGetVisaQuery, useGetVisaByIdQuery, useUpdateVisaMutation, useDeleteVisaMutation, useDeleteSubTravelerMutation, useUpdateSubTravelerMutation, useGetSubTravelerByIdQuery } = visaApi;
 // export const { useCreateVisaMutation, useGetVisaQuery, useGetVisaByIdQuery, useUpdateVisaMutation, useDeleteVisaMutation, useDeleteSubTravelerMutation } = visaApi;

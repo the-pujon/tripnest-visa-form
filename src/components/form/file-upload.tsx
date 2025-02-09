@@ -26,7 +26,7 @@ export function FileUpload({ number, label, name, travelerId, existingFile }: Fi
     }
   }, [existingFile]);
 
-  console.log(fileExists)
+  // console.log(fileExists)
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
