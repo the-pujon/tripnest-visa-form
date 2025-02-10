@@ -129,7 +129,7 @@ export default function EditTravelForm() {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           Object.entries(documentTypes[values.visaType]).forEach(([key, file]: [string, any]) => {
             if (file?.file instanceof File) {
-              formData.append(`primaryTraveler_${visaData.data._id}_${key}`, file.file);
+              formData.append(`primaryTraveler_${key}`, file.file);
               // Remove the existing file data since we're uploading a new one
               const docType = documentTypeKeys[values.visaType];
               if (finalData[docType]?.[key]) {
