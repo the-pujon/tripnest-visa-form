@@ -27,6 +27,9 @@ export default function EditTravelForm() {
     if (visaData?.data?.subTravelers?.length) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       setSubTravelers(visaData.data.subTravelers.map((_: any, index: number) => index + 2));
+    } else {
+      // Ensure at least one sub-traveler form is available
+      setSubTravelers([2]);
     }
   }, [visaData]);
 
@@ -69,7 +72,7 @@ export default function EditTravelForm() {
 
       // Prepare primary traveler data maintaining the same structure
       const finalData = removeEmptyFields({
-        _id: visaData.data._id,
+        _id: visaData?.data?._id || '',
         givenName: values.givenName,
         surname: values.surname,
         phone: values.phone,
@@ -77,14 +80,14 @@ export default function EditTravelForm() {
         address: values.address,
         notes: values.notes,
         visaType: values.visaType,
-        generalDocuments: { ...(visaData.data.generalDocuments || {}) },
-        businessDocuments: { ...(visaData.data.businessDocuments || {}) },
-        studentDocuments: { ...(visaData.data.studentDocuments || {}) },
-        jobHolderDocuments: { ...(visaData.data.jobHolderDocuments || {}) },
-        otherDocuments: { ...(visaData.data.otherDocuments || {}) },
-        createdAt: visaData.data.createdAt,
-        updatedAt: visaData.data.updatedAt,
-        __v: visaData.data.__v,
+        generalDocuments: { ...(visaData?.data?.generalDocuments || {}) },
+        businessDocuments: { ...(visaData?.data?.businessDocuments || {}) },
+        studentDocuments: { ...(visaData?.data?.studentDocuments || {}) },
+        jobHolderDocuments: { ...(visaData?.data?.jobHolderDocuments || {}) },
+        otherDocuments: { ...(visaData?.data?.otherDocuments || {}) },
+        createdAt: visaData?.data?.createdAt,
+        updatedAt: visaData?.data?.updatedAt,
+        __v: visaData?.data?.__v,
         subTravelers: []
       });
 
@@ -145,16 +148,22 @@ export default function EditTravelForm() {
       }
       
       // Get sub travelers data
+      const submittedSubTravelers = [];
+      const newTravelers = [];
+
       for (let i = 0; i < subTravelers.length; i++) {
         const subTravelerId = subTravelers[i];
         const subTravelerForm = formMethodsRef.current.get(subTravelerId);
         if (subTravelerForm) {
           const subValues = subTravelerForm.getValues();
-          const originalSubTraveler = visaData.data.subTravelers[i];
+          
+          // Check if this is a new sub-traveler or an existing one
+          const originalSubTraveler = visaData?.data?.subTravelers?.[i];
           
           // Create sub traveler data maintaining the same structure
           const subTravelerData = removeEmptyFields({
-            _id: originalSubTraveler._id,
+            // If it's a new sub-traveler, don't include _id
+            ...(originalSubTraveler ? { _id: originalSubTraveler._id } : {}),
             givenName: subValues.givenName,
             surname: subValues.surname,
             phone: subValues.phone,
@@ -162,24 +171,45 @@ export default function EditTravelForm() {
             address: subValues.address,
             notes: subValues.notes,
             visaType: subValues.visaType,
-            generalDocuments: { ...(originalSubTraveler.generalDocuments || {}) },
-            businessDocuments: { ...(originalSubTraveler.businessDocuments || {}) },
-            studentDocuments: { ...(originalSubTraveler.studentDocuments || {}) },
-            jobHolderDocuments: { ...(originalSubTraveler.jobHolderDocuments || {}) },
-            otherDocuments: { ...(originalSubTraveler.otherDocuments || {}) },
-            createdAt: originalSubTraveler.createdAt,
-            updatedAt: originalSubTraveler.updatedAt
+            generalDocuments: originalSubTraveler 
+              ? { ...(originalSubTraveler.generalDocuments || {}) } 
+              : {},
+            businessDocuments: originalSubTraveler 
+              ? { ...(originalSubTraveler.businessDocuments || {}) } 
+              : {},
+            studentDocuments: originalSubTraveler 
+              ? { ...(originalSubTraveler.studentDocuments || {}) } 
+              : {},
+            jobHolderDocuments: originalSubTraveler 
+              ? { ...(originalSubTraveler.jobHolderDocuments || {}) } 
+              : {},
+            otherDocuments: originalSubTraveler 
+              ? { ...(originalSubTraveler.otherDocuments || {}) } 
+              : {},
+            ...(originalSubTraveler 
+              ? { 
+                  createdAt: originalSubTraveler.createdAt,
+                  updatedAt: originalSubTraveler.updatedAt 
+                } 
+              : {})
           });
 
           // Handle sub traveler general documents
           if (subValues.generalDocuments) {
             Object.entries(subValues.generalDocuments).forEach(([key, file]) => {
               if (file?.file instanceof File) {
-                formData.append(`subTraveler_${originalSubTraveler._id}_${key}`, file.file);
+                // Use a unique identifier for new sub-travelers
+                const subTravelerIdentifier = originalSubTraveler 
+                  ? originalSubTraveler._id 
+                  : `new${i}`;
+                
+                formData.append(`subTraveler_${subTravelerIdentifier}_${key}`, file.file);
+                
                 // Remove the existing file data since we're uploading a new one
                 if (subTravelerData.generalDocuments?.[key]) {
                   delete subTravelerData.generalDocuments[key];
                 }
+                
                 // Remove the document collection if it's empty
                 if (subTravelerData.generalDocuments && Object.keys(subTravelerData.generalDocuments).length === 0) {
                   delete subTravelerData.generalDocuments;
@@ -211,12 +241,20 @@ export default function EditTravelForm() {
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               Object.entries(subTravelerDocs[subValues.visaType]).forEach(([key, file]: [string, any]) => {
                 if (file?.file instanceof File) {
-                  formData.append(`subTraveler_${originalSubTraveler._id}_${key}`, file.file);
-                  // Remove the existing file data since we're uploading a new one
+                  // Use a unique identifier for new sub-travelers
+                  const subTravelerIdentifier = originalSubTraveler 
+                    ? originalSubTraveler._id 
+                    : `new${i}`;
+                  
+                  formData.append(`subTraveler_${subTravelerIdentifier}_${key}`, file.file);
+                  
                   const docType = documentTypeKeys[subValues.visaType];
+                  
+                  // Remove the existing file data since we're uploading a new one
                   if (subTravelerData[docType]?.[key]) {
                     delete subTravelerData[docType][key];
                   }
+                  
                   // Remove the document collection if it's empty
                   if (subTravelerData[docType] && Object.keys(subTravelerData[docType]).length === 0) {
                     delete subTravelerData[docType];
@@ -226,26 +264,28 @@ export default function EditTravelForm() {
             }
           }
 
-          // Only add sub traveler if it has data other than _id and timestamps
-          const subTravelerDataCopy = { ...subTravelerData };
-          delete subTravelerDataCopy._id;
-          delete subTravelerDataCopy.createdAt;
-          delete subTravelerDataCopy.updatedAt;
-          
-          if (Object.keys(subTravelerDataCopy).length > 0) {
-            // Ensure subTravelers array exists before pushing
-            if (!finalData.subTravelers) {
-              finalData.subTravelers = [];
-            }
-            finalData.subTravelers.push(subTravelerData);
+          // Separate existing and new sub-travelers
+          if (originalSubTraveler) {
+            submittedSubTravelers.push(subTravelerData);
+          } else {
+            newTravelers.push(subTravelerData);
           }
         }
       }
 
-      // Remove subTravelers array if empty
-      if (finalData.subTravelers?.length === 0) {
-        delete finalData.subTravelers;
+      // Update the final data to include sub-travelers
+      finalData.subTravelers = submittedSubTravelers;
+
+      // Append new travelers to formData
+      if (newTravelers.length > 0) {
+        formData.append('newTraveler', JSON.stringify(newTravelers));
       }
+
+      console.log('=== Final Data ===');
+      console.log(finalData);
+      console.log('=== New Travelers ===');
+      console.log(newTravelers);
+      console.log('=== End Data ===\n');
 
       // Append the main data structure
       formData.append('data', JSON.stringify(finalData));
@@ -255,7 +295,8 @@ export default function EditTravelForm() {
       console.log(finalData);
       console.log('\n=== Files Being Sent ===');
       const formDataObject = Object.fromEntries(formData.entries());
-      console.log('FormData as object:', formDataObject);
+      // console.log('FormData as object:', JSON.parse(formDataObject.data));
+      console.log(formDataObject);
       console.log('=== End Files ===\n');
 
       // Call the mutation
@@ -272,6 +313,13 @@ export default function EditTravelForm() {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleAddSubTraveler = () => {
+    const newSubTravelerId = subTravelers.length > 0 
+      ? Math.max(...subTravelers) + 1 
+      : 2;
+    setSubTravelers([...subTravelers, newSubTravelerId]);
   };
 
   if (isLoading) {
@@ -296,14 +344,24 @@ export default function EditTravelForm() {
 
         {subTravelers.map((id, index) => (
           <TravelerFormSection
-            key={`sub-${visaData.data.subTravelers[index]._id}`}
+            key={`sub-${visaData.data.subTravelers?.[index]?._id || ''}`}
             id={id}
             isFirst={false}
             onRemove={() => {}}
             onRegisterFormMethods={(methods) => handleRegisterFormMethods(id, methods)}
-            defaultValues={visaData.data.subTravelers[index]}
+            defaultValues={visaData.data.subTravelers?.[index] || {}}
           />
         ))}
+
+        <div className="mt-4">
+          <button 
+            type="button"
+            onClick={handleAddSubTraveler}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Add Another Sub-Traveler
+          </button>
+        </div>
 
         <div className="flex justify-end space-x-4">
           <button

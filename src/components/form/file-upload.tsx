@@ -32,8 +32,10 @@ export function FileUpload({ number, label, name, travelerId, existingFile }: Fi
     const file = e.target.files?.[0];
     if (file) {
       const maxSize = 5 * 1024 * 1024;
+      // const maxSize = 500 * 1024; //for 500KB
       if (file.size > maxSize) {
         toast.error('File size must be less than 5MB');
+        // toast.error('File size must be less than 500KB'); //for 500KB
         e.target.value = '';
         return;
       }
