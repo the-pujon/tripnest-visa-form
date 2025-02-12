@@ -134,13 +134,12 @@ export default function EditTravelForm() {
             if (file?.file instanceof File) {
               formData.append(`primaryTraveler_${key}`, file.file);
               // Remove the existing file data since we're uploading a new one
-              const docType = documentTypeKeys[values.visaType];
-              if (finalData[docType]?.[key]) {
-                delete finalData[docType][key];
+              if (finalData[documentTypeKeys[values.visaType]]?.[key]) {
+                delete finalData[documentTypeKeys[values.visaType]][key];
               }
               // Remove the document collection if it's empty
-              if (finalData[docType] && Object.keys(finalData[docType]).length === 0) {
-                delete finalData[docType];
+              if (finalData[documentTypeKeys[values.visaType]] && Object.keys(finalData[documentTypeKeys[values.visaType]]).length === 0) {
+                delete finalData[documentTypeKeys[values.visaType]];
               }
             }
           });
@@ -150,6 +149,7 @@ export default function EditTravelForm() {
       // Get sub travelers data
       const submittedSubTravelers = [];
       const newTravelers = [];
+      let newTravelerCounter = 1;
 
       for (let i = 0; i < subTravelers.length; i++) {
         const subTravelerId = subTravelers[i];
@@ -160,10 +160,13 @@ export default function EditTravelForm() {
           // Check if this is a new sub-traveler or an existing one
           const originalSubTraveler = visaData?.data?.subTravelers?.[i];
           
+          // Generate new traveler id if it's a new sub-traveler
+          const newTravelerId = originalSubTraveler ? null : `new${newTravelerCounter}`;
+          
           // Create sub traveler data maintaining the same structure
           const subTravelerData = removeEmptyFields({
-            // If it's a new sub-traveler, don't include _id
-            ...(originalSubTraveler ? { _id: originalSubTraveler._id } : {}),
+            // If it's a new sub-traveler, include the new id
+            ...(originalSubTraveler ? { _id: originalSubTraveler._id } : { id: newTravelerId }),
             givenName: subValues.givenName,
             surname: subValues.surname,
             phone: subValues.phone,
@@ -198,10 +201,10 @@ export default function EditTravelForm() {
           if (subValues.generalDocuments) {
             Object.entries(subValues.generalDocuments).forEach(([key, file]) => {
               if (file?.file instanceof File) {
-                // Use a unique identifier for new sub-travelers
+                // Use the appropriate identifier
                 const subTravelerIdentifier = originalSubTraveler 
                   ? originalSubTraveler._id 
-                  : `new${i}`;
+                  : newTravelerId;
                 
                 formData.append(`subTraveler_${subTravelerIdentifier}_${key}`, file.file);
                 
@@ -241,23 +244,21 @@ export default function EditTravelForm() {
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               Object.entries(subTravelerDocs[subValues.visaType]).forEach(([key, file]: [string, any]) => {
                 if (file?.file instanceof File) {
-                  // Use a unique identifier for new sub-travelers
+                  // Use the appropriate identifier
                   const subTravelerIdentifier = originalSubTraveler 
                     ? originalSubTraveler._id 
-                    : `new${i}`;
+                    : newTravelerId;
                   
                   formData.append(`subTraveler_${subTravelerIdentifier}_${key}`, file.file);
                   
-                  const docType = documentTypeKeys[subValues.visaType];
-                  
                   // Remove the existing file data since we're uploading a new one
-                  if (subTravelerData[docType]?.[key]) {
-                    delete subTravelerData[docType][key];
+                  if (subTravelerData[documentTypeKeys[subValues.visaType]]?.[key]) {
+                    delete subTravelerData[documentTypeKeys[subValues.visaType]][key];
                   }
                   
                   // Remove the document collection if it's empty
-                  if (subTravelerData[docType] && Object.keys(subTravelerData[docType]).length === 0) {
-                    delete subTravelerData[docType];
+                  if (subTravelerData[documentTypeKeys[subValues.visaType]] && Object.keys(subTravelerData[documentTypeKeys[subValues.visaType]]).length === 0) {
+                    delete subTravelerData[documentTypeKeys[subValues.visaType]];
                   }
                 }
               });
@@ -269,6 +270,7 @@ export default function EditTravelForm() {
             submittedSubTravelers.push(subTravelerData);
           } else {
             newTravelers.push(subTravelerData);
+            newTravelerCounter++; // Increment counter for next new traveler
           }
         }
       }
@@ -344,7 +346,7 @@ export default function EditTravelForm() {
 
         {subTravelers.map((id, index) => (
           <TravelerFormSection
-            key={`sub-${visaData.data.subTravelers?.[index]?._id || ''}`}
+            key={`sub-${visaData.data.subTravelers?.[index]?._id || id}`}
             id={id}
             isFirst={false}
             onRemove={() => {}}
@@ -354,12 +356,12 @@ export default function EditTravelForm() {
         ))}
 
         <div className="mt-4">
-          <button 
+        <button
             type="button"
+            className="text-[#FF6B00] hover:text-[#FF6B00]/80 font-semibold pl-5"
             onClick={handleAddSubTraveler}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           >
-            Add Another Sub-Traveler
+            + Add Traveler
           </button>
         </div>
 
