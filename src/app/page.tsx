@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import type { IVisaForm } from "@/interface/visaFormInterface";
 import { useEffect, useState, useRef, useCallback } from "react";
-import { TravelerFormSection } from "@/components/form/TavelerFormSection";
+import { TravelerFormSection } from "@/components/form/TravelerFormSection";
 import { useFormValidation } from "@/hooks/useFormValidation";
 import { SubmissionModal } from "@/components/modal/SubmissionModal";
 import toast from "react-hot-toast";

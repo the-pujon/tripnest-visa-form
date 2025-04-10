@@ -54,7 +54,6 @@ export function TravelerFormSection({
 				passportPhoto: defaultFileUpload,
 				bankStatement: defaultFileUpload,
 				bankSolvency: defaultFileUpload,
-				// visitingCard: defaultFileUpload,
 				hotelBooking: defaultFileUpload,
 				airTicket: defaultFileUpload,
 				previousVisa: defaultFileUpload,
@@ -88,10 +87,6 @@ export function TravelerFormSection({
 						...defaultFileUpload,
 						...defaultValues.generalDocuments?.bankSolvency,
 					},
-					// visitingCard: {
-					// 	...defaultFileUpload,
-					// 	...defaultValues.generalDocuments?.visitingCard,
-					// },
 					hotelBooking: {
 						...defaultFileUpload,
 						...defaultValues.generalDocuments?.hotelBooking,
@@ -140,9 +135,7 @@ export function TravelerFormSection({
 			if (value === "business") {
 				formMethods.setValue("businessDocuments", {
 					tradeLicense: defaultFileUpload,
-					// notarizedId: defaultFileUpload,
 					memorandum: defaultFileUpload,
-					// officePad: defaultFileUpload,
 					visitingCard: defaultFileUpload,
 					companyPad: defaultFileUpload,
 				});

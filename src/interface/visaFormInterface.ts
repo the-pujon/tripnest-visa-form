@@ -23,21 +23,21 @@ export interface IFileUpload {
   }
   
   export interface IBusinessDocuments {
-    tradeLicense?: IFileUpload;
+    tradeLicense: IFileUpload;
     memorandum?: IFileUpload;
     visitingCard?: IFileUpload;
-    companyPad?: IFileUpload;
+    companyPad: IFileUpload;
   }
   
   export interface IStudentDocuments {
-    studentId?: IFileUpload;
+    studentId: IFileUpload;
     leaveLetter?: IFileUpload;
     birthCertificate?: IFileUpload;
   }
   
   export interface IJobHolderDocuments {
-    nocCertificate?: IFileUpload;
-    officialId?: IFileUpload;
+    nocCertificate: IFileUpload;
+    officialId: IFileUpload;
     bmdcCertificate?: IFileUpload;
     barCouncilCertificate?: IFileUpload;
     retirementCertificate?: IFileUpload;

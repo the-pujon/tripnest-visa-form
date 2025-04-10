@@ -3,7 +3,7 @@
 import { UseFormReturn } from "react-hook-form";
 import type { IVisaForm, VisaType } from "@/interface/visaFormInterface";
 import {useState, useRef, useCallback, useEffect } from "react";
-import { TravelerFormSection } from "@/components/form/TavelerFormSection";
+import { TravelerFormSection } from "@/components/form/TravelerFormSection";
 import toast from "react-hot-toast";
 import { useGetVisaByIdQuery, useUpdatePrimaryTravelerMutation } from "@/redux/features/visaApi";
 import { useParams, useRouter } from "next/navigation";

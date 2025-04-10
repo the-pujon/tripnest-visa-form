@@ -4,7 +4,7 @@ import { UseFormReturn } from "react-hook-form";
 import type { IFileUpload, IVisaForm } from "@/interface/visaFormInterface";
 // import type { IFileUpload } from "@/interface/fileUploadInterface"; // Add this line
 import { useState, useRef, useCallback } from "react";
-import { TravelerFormSection } from "@/components/form/TavelerFormSection";
+import { TravelerFormSection } from "@/components/form/TravelerFormSection";
 import toast from "react-hot-toast";
 import { useGetSubTravelerByIdQuery, useUpdateSubTravelerMutation } from "@/redux/features/visaApi";
 import { useParams, useRouter } from "next/navigation";
