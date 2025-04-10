@@ -44,9 +44,6 @@ const jobHolderDocumentsSchema = z.object({
   retirementCertificate: fileUploadSchema,
 })
 
-const otherDocumentsSchema = z.object({
-  marriageCertificate: fileUploadSchema,
-})
 
 export const travelerFormSchema = z.object({
   givenName: z.string().min(1, "Given name is required"),
@@ -60,5 +57,4 @@ export const travelerFormSchema = z.object({
   businessDocuments: businessDocumentsSchema.optional(),
   studentDocuments: studentDocumentsSchema.optional(),
   jobHolderDocuments: jobHolderDocumentsSchema.optional(),
-  otherDocuments: otherDocumentsSchema.optional(),
 })

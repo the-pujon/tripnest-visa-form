@@ -3,33 +3,24 @@
 export const GENERAL_DOCUMENTS = [
   {
     number: 1,
-    // label: "Passport Scanned Copy",
     label: "Passport Scanned Copy (JPG)*",
     name: "generalDocuments.passportCopy"
   },
   {
     number: 2,
-    // label: "Recent Passport Size Photo",
     label: "Recent Passport Size Photo (3.5* 4.5mm) (JPG)*",
     name: "generalDocuments.passportPhoto"
   },
   {
     number: 3,
-    // label: "Bank Statement of the last 06 months",
     label: "Bank Statement of the last 06 months (PDF)*",
     name: "generalDocuments.bankStatement"
   },
   {
     number: 4,
-    // label: "Bank Solvency Certificate",
     label: "Bank Solvency Certificate (PDF)*",
     name: "generalDocuments.bankSolvency"
   },
-  // {
-  //   number: 5,
-  //   label: "Visiting Card Copy",
-  //   name: "generalDocuments.visitingCard"
-  // },
   {
     number: 5,
     label: "Hotel Booking Copy",
@@ -127,22 +118,11 @@ export const JOB_HOLDER_DOCUMENTS = [
   },
   {
     number: 7,
-    label: "Retirement Certificate",
-    name: "jobHolderDocuments.retirementCertificate"
-  },
-  {
-    number: 8,
     label: "Notarized GO with an English translation (Govt. Employee)",
     name: "jobHolderDocuments.notarizedId"
   }
 ];
 
-// export const OTHER_DOCUMENTS = [
-//   {
-//     number: 1,
-//     label: "Marriage Certificate or Nikahnama (if spouse's name is not on the applicant's passport)",
-//     name: "otherDocuments.marriageCertificate"
-//   }
-// ];
+
 
 // Similar constants for other document types 

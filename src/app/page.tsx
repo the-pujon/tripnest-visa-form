@@ -45,7 +45,9 @@ export default function TravelForm() {
 
       timeoutId = setTimeout(async () => {
         const forms = Array.from(formMethodsRef.current.values());
+        console.log("Validating forms:", forms);
         const valid = await isFormValid(forms);
+        console.log("All forms valid:", valid);
         setIsAllValid(valid);
       }, 500);
     };
@@ -136,12 +138,11 @@ export default function TravelForm() {
         business: primaryTravelerValues.businessDocuments,
         student: primaryTravelerValues.studentDocuments,
         jobHolder: primaryTravelerValues.jobHolderDocuments,
-        // other: primaryTravelerValues.otherDocuments
       } as const;
 
       // Type guard to check if the visaType is valid
       const isValidVisaType = (visaType: string): visaType is VisaType => {
-        return ['business', 'student', 'jobHolder', 'other'].includes(visaType);
+        return ['business', 'student', 'jobHolder'].includes(visaType);
       };
 
       // Update the primary traveler document handling
@@ -171,7 +172,6 @@ export default function TravelForm() {
           business: traveler.businessDocuments,
           student: traveler.studentDocuments,
           jobHolder: traveler.jobHolderDocuments,
-          // other: traveler.otherDocuments
         } as const;
 
         if (isValidVisaType(traveler.visaType) && subTravelerDocs[traveler.visaType]) {
@@ -212,7 +212,6 @@ console.log('FormData as object:', formDataObject);
               businessDocuments: {},
               studentDocuments: {},
               jobHolderDocuments: {},
-              // otherDocuments: {}
             });
           });
           

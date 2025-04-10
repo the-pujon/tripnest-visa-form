@@ -4,7 +4,7 @@ const visaApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         createVisa: builder.mutation({
             query: (data) => ({
-                url: "/visa/create",
+                url: "/visaBooking/v2/create",
                 method: "POST",
                 body: data,
             }),

@@ -11,7 +11,8 @@ import {
 import toast from "react-hot-toast";
   
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+// const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+const API_URL = "http://localhost:4000/api/v1"; // Replace with your actual API URL
 
   const baseQuery = fetchBaseQuery({
     baseUrl: API_URL,

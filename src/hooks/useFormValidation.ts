@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import type { IVisaForm } from '@/interface/visaFormInterface';
 import type { UseFormReturn } from 'react-hook-form';
 
-type VisaType = 'business' | 'student' | 'jobHolder' | 'other';
+type VisaType = 'business' | 'student' | 'jobHolder' ;
 type DocumentField = `${VisaType}Documents`;
 
 export const useFormValidation = () => {
@@ -17,7 +17,8 @@ export const useFormValidation = () => {
         if (
           !values.givenName?.trim() ||
           !values.surname?.trim() ||
-          !values.phone?.trim() ||
+          !values.phone1?.trim() ||
+          !values.phone2?.trim() ||
           !values.email?.trim() ||
           !values.address?.trim() ||
           !values.visaType
@@ -26,7 +27,7 @@ export const useFormValidation = () => {
         }
 
         // Check general documents
-        const generalDocsValid = Object.values(values.generalDocuments).every(
+        const generalDocsValid = Object.values(values.generalDocuments!).every(
           (doc) => doc && doc.uploaded && doc.file
         );
         if (!generalDocsValid) return false;
@@ -42,7 +43,7 @@ export const useFormValidation = () => {
         const updatedValues = { ...values };
 
         // Clear other document types
-        const visaTypes: VisaType[] = ['business', 'student', 'jobHolder', 'other'];
+        const visaTypes: VisaType[] = ['business', 'student', 'jobHolder'];
         visaTypes.forEach((type) => {
           if (type !== values.visaType) {
             const fieldName = `${type}Documents` as DocumentField;

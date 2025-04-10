@@ -1,4 +1,4 @@
-export type VisaType = 'business' | 'student' | 'jobHolder' | 'other' | '';
+export type VisaType = 'business' | 'student' | 'jobHolder'| '';
 
 export interface IFileUpload {
     file: File | null;
@@ -42,9 +42,6 @@ export interface IFileUpload {
     retirementCertificate?: IFileUpload;
   }
   
-  export interface IOtherDocuments {
-    marriageCertificate?: IFileUpload;
-  }
   
   export interface IVisaForm {
     _id?: string;
