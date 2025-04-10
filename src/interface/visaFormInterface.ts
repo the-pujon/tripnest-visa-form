@@ -50,7 +50,8 @@ export interface IFileUpload {
     _id?: string;
     givenName: string;
     surname: string;
-    phone: string;
+    phone1: string;
+    phone2?: string;
     email: string;
     address: string;
     notes?: string;
@@ -59,6 +60,6 @@ export interface IFileUpload {
     businessDocuments?: IBusinessDocuments;
     studentDocuments?: IStudentDocuments;
     jobHolderDocuments?: IJobHolderDocuments;
-    otherDocuments?: IOtherDocuments;
+    // otherDocuments?: IOtherDocuments;
   }
   

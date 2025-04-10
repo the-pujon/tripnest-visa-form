@@ -10,7 +10,7 @@ import toast from "react-hot-toast";
 import { useCreateVisaMutation } from "@/redux/features/visaApi";
 
 // Add this type definition at the top of the file, after the imports
-type VisaType = 'business' | 'student' | 'jobHolder' | 'other';
+type VisaType = 'business' | 'student' | 'jobHolder';
 
 //type for the form methods ref
 type FormMethodsRef = Map<number, ReturnType<typeof useForm<IVisaForm>>>;
@@ -93,7 +93,8 @@ export default function TravelForm() {
       const primaryTravelerData = {
         givenName: primaryTravelerValues.givenName,
         surname: primaryTravelerValues.surname,
-        phone: primaryTravelerValues.phone,
+        phone1: primaryTravelerValues.phone1,
+        phone2: primaryTravelerValues.phone2,
         email: primaryTravelerValues.email,
         address: primaryTravelerValues.address,
         notes: primaryTravelerValues.notes || '',
@@ -103,7 +104,8 @@ export default function TravelForm() {
       const subTravelersData = subTravelersValues.map(traveler => ({
         givenName: traveler.givenName,
         surname: traveler.surname,
-        phone: traveler.phone,
+        phone1: traveler.phone1,
+        phone2: traveler.phone2,
         email: traveler.email,
         address: traveler.address,
         notes: traveler.notes || '',
@@ -134,7 +136,7 @@ export default function TravelForm() {
         business: primaryTravelerValues.businessDocuments,
         student: primaryTravelerValues.studentDocuments,
         jobHolder: primaryTravelerValues.jobHolderDocuments,
-        other: primaryTravelerValues.otherDocuments
+        // other: primaryTravelerValues.otherDocuments
       } as const;
 
       // Type guard to check if the visaType is valid
@@ -169,7 +171,7 @@ export default function TravelForm() {
           business: traveler.businessDocuments,
           student: traveler.studentDocuments,
           jobHolder: traveler.jobHolderDocuments,
-          other: traveler.otherDocuments
+          // other: traveler.otherDocuments
         } as const;
 
         if (isValidVisaType(traveler.visaType) && subTravelerDocs[traveler.visaType]) {
@@ -200,7 +202,8 @@ console.log('FormData as object:', formDataObject);
             methods.reset({
               givenName: '',
               surname: '',
-              phone: '',
+              phone1: '',
+              phone2: '',
               email: '',
               address: '',
               notes: '',
@@ -209,7 +212,7 @@ console.log('FormData as object:', formDataObject);
               businessDocuments: {},
               studentDocuments: {},
               jobHolderDocuments: {},
-              otherDocuments: {}
+              // otherDocuments: {}
             });
           });
           

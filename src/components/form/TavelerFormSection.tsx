@@ -13,7 +13,7 @@ import {
   BUSINESS_DOCUMENTS,
   STUDENT_DOCUMENTS,
   JOB_HOLDER_DOCUMENTS,
-  OTHER_DOCUMENTS,
+  // OTHER_DOCUMENTS,
 } from "@/constants/documents";
 import { TravelerHeader } from "@/components/form/TravelerHeader";
 
@@ -44,7 +44,8 @@ export function TravelerFormSection({
     defaultValues: defaultValues || {
       givenName: "",
       surname: "",
-      phone: "",
+      phone1: "",
+      phone2: "",
       email: "",
       address: "",
       notes: "",
@@ -61,9 +62,9 @@ export function TravelerFormSection({
       businessDocuments: undefined,
       studentDocuments: undefined,
       jobHolderDocuments: undefined,
-      otherDocuments: {
-        marriageCertificate: defaultFileUpload,
-      },
+      // otherDocuments: {
+      //   marriageCertificate: defaultFileUpload,
+      // },
     },
   });
 
@@ -84,9 +85,9 @@ export function TravelerFormSection({
         businessDocuments: defaultValues.businessDocuments,
         studentDocuments: defaultValues.studentDocuments,
         jobHolderDocuments: defaultValues.jobHolderDocuments,
-        otherDocuments: {
-          marriageCertificate: { ...defaultFileUpload, ...defaultValues.otherDocuments?.marriageCertificate },
-        },
+        // otherDocuments: {
+        //   marriageCertificate: { ...defaultFileUpload, ...defaultValues.otherDocuments?.marriageCertificate },
+        // },
       };
       formMethods.reset(formValues);
     }
@@ -109,9 +110,9 @@ export function TravelerFormSection({
         businessDocuments: undefined,
         studentDocuments: undefined,
         jobHolderDocuments: undefined,
-        otherDocuments: {
-          marriageCertificate: defaultFileUpload,
-        },
+        // otherDocuments: {
+        //   marriageCertificate: defaultFileUpload,
+        // },
       });
 
       if (value === "business") {
@@ -186,14 +187,14 @@ export function TravelerFormSection({
                 />
               )}
 
-              {formMethods.watch("visaType") === "other" && (
+              {/* {formMethods.watch("visaType") === "other" && (
                 <DocumentSection
                   title="Other Documents"
                   documents={OTHER_DOCUMENTS}
                   travelerId={id}
                   documentData={defaultValues?.otherDocuments}
                 />
-              )}
+              )} */}
             </form>
           </div>
         </div>

@@ -22,21 +22,28 @@ export function TravelerBasicInfo() {
 
       <div className="grid md:grid-cols-2 gap-4">
         <Input
-          placeholder="Phone Number*"
+          placeholder="Phone Number 1*"
           type="tel"
-          {...register("phone")}
-          error={errors.phone?.message?.toString()}
+          {...register("phone1")}
+          error={errors.phone1?.message?.toString()}
         />
+        
         <Input
           placeholder="Email*"
           type="email"
           {...register("email")}
           error={errors.email?.message?.toString()}
         />
+         <Input
+          placeholder="Phone Number 2*"
+          type="tel"
+          {...register("phone2")}
+          error={errors.phone2?.message?.toString()}
+        />
       </div>
 
       <Input
-        placeholder="Local Address*"
+        placeholder="Current Address*"
         {...register("address")}
         error={errors.address?.message?.toString()}
       />

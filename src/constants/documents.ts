@@ -1,68 +1,84 @@
+// import { number } from "zod";
+
 export const GENERAL_DOCUMENTS = [
   {
     number: 1,
-    label: "Passport Scanned Copy",
+    // label: "Passport Scanned Copy",
+    label: "Passport Scanned Copy (JPG)*",
     name: "generalDocuments.passportCopy"
   },
   {
     number: 2,
-    label: "Recent Passport Size Photo",
+    // label: "Recent Passport Size Photo",
+    label: "Recent Passport Size Photo (3.5* 4.5mm) (JPG)*",
     name: "generalDocuments.passportPhoto"
   },
   {
     number: 3,
-    label: "Bank Statement of the last 06 months",
+    // label: "Bank Statement of the last 06 months",
+    label: "Bank Statement of the last 06 months (PDF)*",
     name: "generalDocuments.bankStatement"
   },
   {
     number: 4,
-    label: "Bank Solvency Certificate",
+    // label: "Bank Solvency Certificate",
+    label: "Bank Solvency Certificate (PDF)*",
     name: "generalDocuments.bankSolvency"
   },
+  // {
+  //   number: 5,
+  //   label: "Visiting Card Copy",
+  //   name: "generalDocuments.visitingCard"
+  // },
   {
     number: 5,
-    label: "Visiting Card Copy",
-    name: "generalDocuments.visitingCard"
-  },
-  {
-    number: 6,
     label: "Hotel Booking Copy",
     name: "generalDocuments.hotelBooking"
   },
   {
-    number: 7,
+    number: 6,
     label: "Air Ticket Booking Copy",
     name: "generalDocuments.airTicket"
+  },
+  {
+    number: 7,
+    label: "Previous Visa Copy",
+    name: "generalDocuments.previousVisa"
+  },
+  {
+    number: 8,
+    label: "Marriage Certificate or Nikahnama (if spouse's name is not on the applicant's passport)",
+    name: "generalDocuments.marriageCertificate"
   }
 ];
 
 export const BUSINESS_DOCUMENTS = [
   {
     number: 1,
-    label: "Valid Trade license copy with notary public (English Translation)",
+    label: " Valid Trade license copy with notary public (English Translated)*",
     name: "businessDocuments.tradeLicense"
   },
   {
     number: 2,
-    label: "Notarized GO with an English Translation (Govt. Employee)",
-    name: "businessDocuments.notarizedId"
+    label: "Company Pad / Company Letter Head Pad. (For Businessperson)*",
+    name: "businessDocuments.companyPad"
   },
   {
     number: 3,
-    label: "Memorandum for Limited Company. (For Business Person)",
-    name: "businessDocuments.memorandum"
+    label: "Visiting Card",
+    name: "businessDocuments.visitingCard"
   },
   {
     number: 4,
-    label: "Office Pad/Company Letter Head Pad (For Business Person)",
-    name: "businessDocuments.officePad"
+    label: "Memorandum for Limited Company. (For Business Person)",
+    name: "businessDocuments.memorandum"
   }
 ];
 
 export const STUDENT_DOCUMENTS = [
   {
     number: 1,
-    label: "Student ID Card (For Student)",
+    label: "Student ID Card (For Student)*",
     name: "studentDocuments.studentId"
   },
   {
@@ -72,8 +88,8 @@ export const STUDENT_DOCUMENTS = [
   },
   {
     number: 3,
-    label: "Travel Letter or the leave letter from the Educational Institution (For Student)",
-    name: "studentDocuments.travelLetter"
+    label: "Leave Letter from the EducationalInstitute. (For Student)",
+    name: "studentDocuments.leaveLetter"
   }
   
 ];
@@ -81,37 +97,52 @@ export const STUDENT_DOCUMENTS = [
 export const JOB_HOLDER_DOCUMENTS = [
   {
     number: 1,
-    label: "NOC Certificate",
+    label: "NOC Certificate*",
     name: "jobHolderDocuments.nocCertificate"
   },
   {
     number: 2,
-    label: "Official ID",
+    label: "Office ID card copy*",
     name: "jobHolderDocuments.officialId"
   },
-  {
+   {
     number: 3,
+    label: "Visiting Card Copy",
+    name: "jobHolderDocuments.visitingCard"
+  },
+  {
+    number: 4,
+    label: "Salary Certificate",
+    name: "jobHolderDocuments.salaryCertificate"
+  },
+  {
+    number: 5,
     label: "BMDC Certificate of Doctors",
     name: "jobHolderDocuments.bmdcCertificate"
   },
   {
-    number: 4,
+    number: 6,
     label: "Bar Council Certificate",
     name: "jobHolderDocuments.barCouncilCertificate"
   },
   {
-    number: 5,
+    number: 7,
     label: "Retirement Certificate",
     name: "jobHolderDocuments.retirementCertificate"
+  },
+  {
+    number: 8,
+    label: "Notarized GO with an English translation (Govt. Employee)",
+    name: "jobHolderDocuments.notarizedId"
   }
 ];
 
-export const OTHER_DOCUMENTS = [
-  {
-    number: 1,
-    label: "Marriage Certificate or Nikahnama (if spouse's name is not on the applicant's passport)",
-    name: "otherDocuments.marriageCertificate"
-  }
-];
+// export const OTHER_DOCUMENTS = [
+//   {
+//     number: 1,
+//     label: "Marriage Certificate or Nikahnama (if spouse's name is not on the applicant's passport)",
+//     name: "otherDocuments.marriageCertificate"
+//   }
+// ];
 
 // Similar constants for other document types 

@@ -7,7 +7,7 @@ interface VisaTypeSelectorProps {
 
 export function VisaTypeSelector({ onVisaTypeChange }: VisaTypeSelectorProps) {
   const { watch } = useFormContext<IVisaForm>();
-  const currentVisaType = watch("visaType");
+  const currentVisaType =  watch("visaType");
 
   return (
     <select
@@ -19,7 +19,7 @@ export function VisaTypeSelector({ onVisaTypeChange }: VisaTypeSelectorProps) {
       <option value="jobHolder">Job Holder&apos;s Documents</option>
       <option value="business">Businessperson&apos;s Documents</option>
       <option value="student">Student&apos;s Documents</option>
-      <option value="other">Other Documents</option>
+      {/* <option value="other">Other Documents</option> */}
     </select>
   );
 } 
