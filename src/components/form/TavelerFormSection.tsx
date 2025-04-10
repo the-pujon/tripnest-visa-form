@@ -54,9 +54,11 @@ export function TravelerFormSection({
 				passportPhoto: defaultFileUpload,
 				bankStatement: defaultFileUpload,
 				bankSolvency: defaultFileUpload,
-				visitingCard: defaultFileUpload,
+				// visitingCard: defaultFileUpload,
 				hotelBooking: defaultFileUpload,
 				airTicket: defaultFileUpload,
+				previousVisa: defaultFileUpload,
+				marriageCertificate: defaultFileUpload,
 			},
 			businessDocuments: undefined,
 			studentDocuments: undefined,
@@ -86,10 +88,10 @@ export function TravelerFormSection({
 						...defaultFileUpload,
 						...defaultValues.generalDocuments?.bankSolvency,
 					},
-					visitingCard: {
-						...defaultFileUpload,
-						...defaultValues.generalDocuments?.visitingCard,
-					},
+					// visitingCard: {
+					// 	...defaultFileUpload,
+					// 	...defaultValues.generalDocuments?.visitingCard,
+					// },
 					hotelBooking: {
 						...defaultFileUpload,
 						...defaultValues.generalDocuments?.hotelBooking,
@@ -97,6 +99,14 @@ export function TravelerFormSection({
 					airTicket: {
 						...defaultFileUpload,
 						...defaultValues.generalDocuments?.airTicket,
+					},
+					previousVisa: {
+						...defaultFileUpload,
+						...defaultValues.generalDocuments?.previousVisa,
+					},
+					marriageCertificate: {
+						...defaultFileUpload,
+						...defaultValues.generalDocuments?.marriageCertificate,
 					},
 				},
 				businessDocuments: defaultValues.businessDocuments,
@@ -130,14 +140,16 @@ export function TravelerFormSection({
 			if (value === "business") {
 				formMethods.setValue("businessDocuments", {
 					tradeLicense: defaultFileUpload,
-					notarizedId: defaultFileUpload,
+					// notarizedId: defaultFileUpload,
 					memorandum: defaultFileUpload,
-					officePad: defaultFileUpload,
+					// officePad: defaultFileUpload,
+					visitingCard: defaultFileUpload,
+					companyPad: defaultFileUpload,
 				});
 			} else if (value === "student") {
 				formMethods.setValue("studentDocuments", {
 					studentId: defaultFileUpload,
-					travelLetter: defaultFileUpload,
+					leaveLetter: defaultFileUpload,
 					birthCertificate: defaultFileUpload,
 				});
 			} else if (value === "jobHolder") {
@@ -147,6 +159,8 @@ export function TravelerFormSection({
 					bmdcCertificate: defaultFileUpload,
 					barCouncilCertificate: defaultFileUpload,
 					retirementCertificate: defaultFileUpload,
+					notarizedId: defaultFileUpload,
+					salaryCertificate: defaultFileUpload
 				});
 			}
 		},

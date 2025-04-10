@@ -11,30 +11,31 @@ const fileUploadSchema = z.object({
       total: z.number(),
     })
     .optional(),
-})
+}).optional()
 
 const generalDocumentsSchema = z.object({
   passportCopy: fileUploadSchema,
   passportPhoto: fileUploadSchema,
   bankStatement: fileUploadSchema,
   bankSolvency: fileUploadSchema,
-  visitingCard: fileUploadSchema,
-  hotelBooking: fileUploadSchema,
-  airTicket: fileUploadSchema,
-})
+  hotelBooking: fileUploadSchema.optional(),
+  airTicket: fileUploadSchema.optional(),
+  previousVisa: fileUploadSchema.optional(),
+  marriageCertificate: fileUploadSchema.optional(),
+}).optional()
 
 const businessDocumentsSchema = z.object({
   tradeLicense: fileUploadSchema,
-  notarizedId: fileUploadSchema,
   memorandum: fileUploadSchema,
-  officePad: fileUploadSchema,
-})
+  companyPad: fileUploadSchema,
+  visitingCard: fileUploadSchema,
+}).optional()
 
 const studentDocumentsSchema = z.object({
   studentId: fileUploadSchema,
-  travelLetter: fileUploadSchema,
+  leaveLetter: fileUploadSchema,
   birthCertificate: fileUploadSchema,
-})
+}).optional()
 
 const jobHolderDocumentsSchema = z.object({
   nocCertificate: fileUploadSchema,
@@ -42,13 +43,17 @@ const jobHolderDocumentsSchema = z.object({
   bmdcCertificate: fileUploadSchema,
   barCouncilCertificate: fileUploadSchema,
   retirementCertificate: fileUploadSchema,
-})
+  visitingCard: fileUploadSchema,
+  salaryCertificate: fileUploadSchema,
+  notarizedId: fileUploadSchema,
+}).optional()
 
 
 export const travelerFormSchema = z.object({
   givenName: z.string().min(1, "Given name is required"),
   surname: z.string().min(1, "Surname is required"),
-  phone: z.string().min(1, "Phone number is required"),
+  phone1: z.string().min(1, "Phone number is required"),
+  phone2: z.string().min(1, "Phone number is required"),
   email: z.string().email("Invalid email address"),
   address: z.string().min(1, "Address is required"),
   notes: z.string(),

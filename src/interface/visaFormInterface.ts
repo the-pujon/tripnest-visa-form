@@ -16,21 +16,22 @@ export interface IFileUpload {
     passportPhoto: IFileUpload;
     bankStatement: IFileUpload;
     bankSolvency: IFileUpload;
-    visitingCard: IFileUpload;
-    hotelBooking: IFileUpload;
-    airTicket: IFileUpload;
+    hotelBooking?: IFileUpload;
+    airTicket?: IFileUpload;
+    previousVisa?: IFileUpload;
+    marriageCertificate?: IFileUpload;
   }
   
   export interface IBusinessDocuments {
     tradeLicense?: IFileUpload;
-    notarizedId?: IFileUpload;
     memorandum?: IFileUpload;
-    officePad?: IFileUpload;
+    visitingCard?: IFileUpload;
+    companyPad?: IFileUpload;
   }
   
   export interface IStudentDocuments {
     studentId?: IFileUpload;
-    travelLetter?: IFileUpload;
+    leaveLetter?: IFileUpload;
     birthCertificate?: IFileUpload;
   }
   
@@ -40,6 +41,8 @@ export interface IFileUpload {
     bmdcCertificate?: IFileUpload;
     barCouncilCertificate?: IFileUpload;
     retirementCertificate?: IFileUpload;
+    salaryCertificate?: IFileUpload;
+    notarizedId?: IFileUpload;
   }
   
   
@@ -53,7 +56,7 @@ export interface IFileUpload {
     address: string;
     notes?: string;
     visaType: VisaType;
-    generalDocuments?: Record<string, IFileUpload>;
+    generalDocuments?: IGeneralDocuments;
     businessDocuments?: IBusinessDocuments;
     studentDocuments?: IStudentDocuments;
     jobHolderDocuments?: IJobHolderDocuments;
