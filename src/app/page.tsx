@@ -253,50 +253,49 @@ console.log('FormData as object:', formDataObject);
   };
 
   return (
-    <>
-      <div className="w-full max-w-5xl mx-auto py-10">
-        <div className="bg-white shadow-md rounded-lg overflow-hidden lg:px-28 px-0 pb-10">
-          {travelerIds.map((id) => (
-            <TravelerFormSection
-              key={id}
-              id={id}
-              onRemove={removeTraveler}
-              isFirst={id === 1}
-              onRegisterFormMethods={(methods) => registerFormMethods(id, methods)}
-            />
-          ))}
-          <button
-            type="button"
-            className="text-[#FF6B00] hover:text-[#FF6B00]/80 font-semibold pl-5"
-            onClick={addTraveler}
-          >
-            + Add Traveler
-          </button>
-        </div>
+		<>
+			<div className="w-full max-w-5xl mx-auto py-10 font-signika-negative">
+				<div className="bg-white rounded-lg overflow-hidden px-3 lg:px-2 px-0 pb-10">
+					{travelerIds.map((id) => (
+						<TravelerFormSection
+							key={id}
+							id={id}
+							onRemove={removeTraveler}
+							isFirst={id === 1}
+							onRegisterFormMethods={(methods) =>
+								registerFormMethods(id, methods)
+							}
+						/>
+					))}
+					<button
+						type="button"
+						className="text-[#FF6B00] hover:text-[#FF6B00]/80 font-semibold pl-5"
+						onClick={addTraveler}
+					>
+						+ Add Traveler
+					</button>
+				</div>
 
-        <div className="flex flex-col items-center gap-4 mt-5">
-          <button
-            type="button"
-            onClick={handleSubmitAll}
-            className="self-center py-2 px-11 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-secondary hover:bg-primary/70 transition-all duration-500 focus:outline-none focus:ring-0 focus:ring-offset-0 disabled:bg-gray-400 disabled:cursor-not-allowed"
-            disabled={!isAllValid || isSubmitting}
-          >
-            {isSubmitting ? (
-              <span className="flex items-center gap-2">
-                <span className="animate-spin">⏳</span>
-                Submitting...
-              </span>
-            ) : (
-              "Submit All Documents"
-            )}
-          </button>
-        </div>
-      </div>
-      
-      <SubmissionModal 
-        isOpen={showSuccessModal} 
-        onClose={handleCloseModal} 
-      />
-    </>
-  );
+				<div className="flex flex-col items-center gap-4 mt-5">
+					<button
+						type="button"
+						onClick={handleSubmitAll}
+						className="self-center py-2 px-11 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-secondary hover:bg-primary/70 transition-all duration-500 focus:outline-none focus:ring-0 focus:ring-offset-0 disabled:bg-gray-400 disabled:cursor-not-allowed"
+						disabled={!isAllValid || isSubmitting}
+					>
+						{isSubmitting ? (
+							<span className="flex items-center gap-2">
+								<span className="animate-spin">⏳</span>
+								Submitting...
+							</span>
+						) : (
+							"Submit All Documents"
+						)}
+					</button>
+				</div>
+			</div>
+
+			<SubmissionModal isOpen={showSuccessModal} onClose={handleCloseModal} />
+		</>
+	);
 }

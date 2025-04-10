@@ -51,6 +51,10 @@ export default {
   				'5': 'hsl(var(--chart-5))'
   			}
   		},
+      fontFamily: {
+        'signika-negative': ['"Signika Negative"', 'sans-serif'], // Ensure proper CSS syntax with quotes
+        sans: ['"Signika Negative"', ...require('tailwindcss/defaultTheme').fontFamily.sans], // Set as default sans font
+      },
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
