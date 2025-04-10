@@ -53,7 +53,8 @@ export default function UpdateSubTravelForm() {
       formData.append('data', JSON.stringify({
         givenName: values.givenName,
         surname: values.surname,
-        phone: values.phone,
+        phone1: values.phone1,
+        phone2: values.phone2,
         email: values.email,
         address: values.address,
         notes: values.notes,
@@ -66,7 +67,7 @@ export default function UpdateSubTravelForm() {
       documentTypes.forEach((docType) => {
         const documents = values[docType as keyof IVisaForm];
         if (documents && typeof documents === 'object') {
-          Object.entries(documents as Record<string, IFileUpload>).forEach(([key, value]) => {
+          Object.entries(documents as unknown as Record<string, IFileUpload>).forEach(([key, value]) => {
             if (value?.file) {
               formData.append(`subTraveler_${key}`, value.file);
             }

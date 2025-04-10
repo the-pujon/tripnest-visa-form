@@ -6,7 +6,7 @@ interface TravelerHeaderProps {
   onRemove: (id: number) => void;
 }
 
-export function TravelerHeader({ id, isFirst, onRemove }: TravelerHeaderProps) {
+export function TravelerHeader({ id, onRemove }: TravelerHeaderProps) {
   return (
 		<div className="flex items-center justify-between">
 			<div className="flex items-center gap-4">

@@ -110,7 +110,7 @@ export function TravelerFormSection({
 			};
 			formMethods.reset(formValues);
 		}
-	}, [defaultValues]);
+	}, [defaultValues, formMethods]);
 
 	// Register form methods with parent component
 	useEffect(() => {
