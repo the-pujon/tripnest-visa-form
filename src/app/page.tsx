@@ -266,13 +266,15 @@ console.log('FormData as object:', formDataObject);
 							}
 						/>
 					))}
-					<button
+					<div className="flex flex-col gap-4 mt-5">
+          <button
 						type="button"
-						className="text-[#FF6B00] hover:text-[#FF6B00]/80 font-semibold pl-5"
+						className="text-[#FF6B00] hover:text-[#FF6B00]/80 font-semibold pl-5 self-end"
 						onClick={addTraveler}
 					>
 						+ Add Traveler
 					</button>
+          </div>
 				</div>
 
 				<div className="flex flex-col items-center gap-4 mt-5">
